@@ -1,4 +1,4 @@
-# Bookly
+# OpenBooks
 
 ## Integrantes
 
@@ -7,11 +7,11 @@
 
 ## Nombre del proyecto
 
-**Bookly**
+**OpenBooks**
 
 ## Descripción del proyecto
 
-Bookly es una aplicación iOS que permitirá buscar libros mediante Open Library, consultar la información básica de cada libro y administrar una colección personal de libros guardados.
+OpenBooks es una aplicación iOS que permitirá buscar libros mediante Open Library, consultar la información básica de cada libro y administrar una colección personal de libros guardados.
 
 La aplicación se desarrollará principalmente con SwiftUI.
 
