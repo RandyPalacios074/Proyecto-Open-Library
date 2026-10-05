@@ -79,7 +79,7 @@ De esta manera, los diferentes flujos utilizan una misma pantalla de detalle y s
 
 El diagrama representa los recorridos principales de navegación. Los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía se muestran por separado en los wireframes.
 
-## Wireframes
+## Wireframes iniciales
 
 Los siguientes wireframes representan la estructura inicial de las principales pantallas de la aplicación y los estados necesarios para cubrir el MVP.
 
@@ -215,6 +215,154 @@ No se utilizarán descripciones extensas cuando una acción pueda expresarse de 
 
 Si posteriormente se agrega contenido textual visible, como una sinopsis, este también deberá ser accesible mediante VoiceOver. Actualmente la sinopsis no forma parte del MVP.
 
+## Documentación del proyecto
+
+La documentación adicional del proyecto se encuentra en la carpeta `Docs`.
+
+### Diseño de navegación y estado
+
+El análisis de navegación y organización del estado de OpenBooks se encuentra en:
+
+[`Docs/navigation-and-state.md`](Docs/navigation-and-state.md)
+
+Este documento incluye:
+
+- El mapa de navegación de las pantallas del MVP.
+- La información que muestra, recibe, modifica y necesita conservar cada pantalla.
+- La organización del estado y la definición de dónde debería vivir cada dato.
+- La diferencia entre estado local y estado compartido.
+- La definición de una sola fuente de verdad para los datos compartidos.
+- La estrategia de navegación propuesta para SwiftUI.
+- La relación entre la propuesta y el prototipo actual de OpenBooks.
+
+## Pantallas actuales
+
+Las siguientes capturas muestran el estado actual de las pantallas implementadas en OpenBooks.
+Estas imágenes se actualizarán conforme avance el proyecto para mantener un registro visual de los cambios realizados en la interfaz.
+
+### Pantalla principal
+
+Muestra el buscador, la lista inicial de libros y la navegación entre **Inicio** y **Mis libros**.
+
+<table align="center">
+  <tr>
+    <td>
+      <img width="260" alt="01-pantalla-principal" src="https://github.com/user-attachments/assets/9000cb2b-fc82-4a9f-9aa6-3ad09755adaf" />
+    </td>
+  </tr>
+</table>
+
+### Resultados de búsqueda
+
+Muestra los resultados de una búsqueda y permite seleccionar un libro para consultar su detalle.
+
+
+<table align="center">
+  <tr>
+    <td>
+      <img width="260" alt="02-resultados" src="https://github.com/user-attachments/assets/f4403735-70f6-4926-bfb7-46987f16e3d2" />
+    </td>
+  </tr>
+</table>
+
+### Detalle de un libro no guardado
+
+Muestra la información del libro seleccionado y la opción **Guardar libro**.
+
+<table align="center">
+  <tr>
+    <td>
+      <img width="260" alt="03-detalle-no-guardado" src="https://github.com/user-attachments/assets/205931c3-31c4-406b-a4e7-82029595fd97" />
+    </td>
+  </tr>
+</table>
+  
+### Detalle de un libro guardado
+
+Muestra la información de un libro guardado y la opción **Eliminar de Mis libros**.
+
+<table align="center">
+  <tr>
+    <td>
+      <img width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
+    </td>
+  </tr>
+</table>
+
+### Mis libros
+
+Muestra los libros que se encuentran guardados en la colección.
+
+<table align="center">
+  <tr>
+    <td>
+      <img width="260" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
+    </td>
+  </tr>
+</table>
+
+### Mis libros vacío
+
+Muestra el estado de la sección cuando todavía no existen libros guardados.
+
+<table align="center">
+  <tr>
+    <td>
+       <img width="260" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/7beac29c-e70e-4cd8-86a0-08563d5f0957" />
+    </td>
+  </tr>
+</table>
+
+## Estados de búsqueda
+
+### Carga
+
+Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda.
+
+<table align="center">
+  <tr>
+    <td>
+       <img width="260" alt="07-cargando" src="https://github.com/user-attachments/assets/f441b56a-8f55-4bcb-af79-4cd62969084e" />
+    </td>
+  </tr>
+</table>
+
+### Búsqueda sin resultados
+
+Muestra el estado utilizado cuando no se encuentran libros que coincidan con la búsqueda.
+
+<table align="center">
+  <tr>
+    <td>
+       <img width="260" alt="08-no-resultados" src="https://github.com/user-attachments/assets/a80647df-3a93-47a4-bb42-9883a9712b98" />
+    </td>
+  </tr>
+</table>
+  
+### Error en la búsqueda
+
+Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
+
+<table align="center">
+  <tr>
+    <td>
+       <img width="260" alt="09-error" src="https://github.com/user-attachments/assets/ac6c4726-265b-4c22-84cd-2c316f16477e" />
+    </td>
+  </tr>
+</table>
+
+### Libro sin portada
+
+Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una portada disponible.
+
+<table align="center">
+  <tr>
+    <td>
+       <img width="260" alt="10-sin-portada" src="https://github.com/user-attachments/assets/7d89a443-d41a-4d5b-b5e3-a766f45defe6" />
+    </td>
+  </tr>
+</table>
+
 ## Estado actual del proyecto
 
 Actualmente se encuentran desarrollados:
@@ -222,11 +370,13 @@ Actualmente se encuentran desarrollados:
 - El objetivo y alcance del proyecto.
 - El MVP.
 - El flujo principal de usuario.
-- Los wireframes de las principales pantallas.
+- Los wireframes iniciales de las principales pantallas.
 - Las vistas principales de la aplicación en SwiftUI.
-- La navegación inicial entre Inicio, Resultados, Detalle del libro y Mis libros.
+- La navegación inicial entre **Inicio**, **Resultados**, **Detalle del libro** y **Mis libros**.
 - La representación de los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
 - La planificación de accesibilidad mediante VoiceOver.
+- La documentación del diseño de navegación y organización del estado.
+- Las capturas del estado actual de las pantallas implementadas.
 
 La integración con Open Library, la persistencia local y las demás funcionalidades del MVP se desarrollarán progresivamente durante el proyecto.
 
@@ -236,3 +386,4 @@ La integración con Open Library, la persistencia local y las demás funcionalid
 2. Abrir `OpenBooks.xcodeproj` en Xcode.
 3. Seleccionar un simulador de iOS.
 4. Ejecutar el proyecto desde Xcode.
+
