@@ -1,4 +1,5 @@
 import SwiftUI
+import Observation
 
 struct Book {
     let title: String
@@ -8,14 +9,12 @@ struct Book {
     var isSaved: Bool
 }
 
-enum AppScreen {
-    case home
-    case results
-    case detail
-    case myBooks
+@Observable
+class BooksState {
+    var books: [Book] = mockBooks
 }
 
-enum ResultsState {
+enum SearchViewState {
     case loading
     case content
     case noResults

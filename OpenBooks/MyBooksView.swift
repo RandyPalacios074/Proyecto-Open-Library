@@ -3,7 +3,6 @@ import SwiftUI
 struct MyBooksView: View {
     let books: [Book]
 
-    let onBookSelected: (Int) -> Void
     let onHome: () -> Void
     let onSearch: () -> Void
 
@@ -26,10 +25,9 @@ struct MyBooksView: View {
                         ForEach(0..<books.count) { index in
                             if books[index].isSaved {
                                 BookRowView(
-                                    book: books[index]
-                                ) {
-                                    onBookSelected(index)
-                                }
+                                    book: books[index],
+                                    destination: index
+                                )
 
                                 if hasSavedBookAfter(index: index) {
                                     RoundedRectangle(cornerRadius: 0)
