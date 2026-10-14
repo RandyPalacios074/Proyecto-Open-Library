@@ -79,7 +79,7 @@ De esta manera, los diferentes flujos utilizan una misma pantalla de detalle y s
 
 El diagrama representa los recorridos principales de navegación. Los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía se muestran por separado en los wireframes.
 
-## Wireframes iniciales
+## Wireframes
 
 Los siguientes wireframes representan la estructura inicial de las principales pantallas de la aplicación y los estados necesarios para cubrir el MVP.
 
@@ -235,6 +235,22 @@ Este documento incluye:
 - La estrategia de navegación propuesta para SwiftUI.
 - La relación entre la propuesta y el prototipo actual de OpenBooks.
 
+### Propuesta de arquitectura MVVM
+
+El análisis de separación de responsabilidades y la propuesta de organización basada en MVVM se encuentra en:
+
+[`Docs/mvvm-proposal.md`](Docs/mvvm-proposal.md)
+
+Este documento incluye:
+
+- La revisión de la estructura actual del proyecto.
+- La separación entre interfaz, datos y lógica.
+- La relación entre Model, View y ViewModel.
+- Las responsabilidades que podrían salir de las vistas.
+- Una propuesta de organización para el proyecto.
+- La distinción entre estado local y estado compartido.
+- Los primeros cambios que podrían realizarse durante una futura refactorización.
+
 ## Pantallas actuales
 
 Las siguientes capturas muestran el estado actual de las pantallas implementadas en OpenBooks.
@@ -284,7 +300,7 @@ Muestra la información de un libro guardado y la opción **Eliminar de Mis libr
 <table align="center">
   <tr>
     <td>
-      <img width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
+      <img width="260" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
     </td>
   </tr>
 </table>
@@ -296,7 +312,7 @@ Muestra los libros que se encuentran guardados en la colección.
 <table align="center">
   <tr>
     <td>
-      <img width="260" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
+      <img width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
     </td>
   </tr>
 </table>
@@ -372,13 +388,22 @@ Actualmente se encuentran desarrollados:
 - El flujo principal de usuario.
 - Los wireframes iniciales de las principales pantallas.
 - Las vistas principales de la aplicación en SwiftUI.
-- La navegación inicial entre **Inicio**, **Resultados**, **Detalle del libro** y **Mis libros**.
+- La navegación principal entre **Inicio**, **Resultados**, **Detalle del libro** y **Mis libros** mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
+- El regreso entre pantallas mediante la navegación de SwiftUI.
+- Un caso real de estado compartido para la colección de libros.
+- Una sola fuente de verdad para el estado de guardado de los libros mediante `BooksState`.
+- La actualización de **Mis libros** al guardar o eliminar un libro desde su detalle.
 - La representación de los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
 - La planificación de accesibilidad mediante VoiceOver.
 - La documentación del diseño de navegación y organización del estado.
+- El análisis de separación de responsabilidades y la propuesta de arquitectura basada en MVVM.
 - Las capturas del estado actual de las pantallas implementadas.
 
-La integración con Open Library, la persistencia local y las demás funcionalidades del MVP se desarrollarán progresivamente durante el proyecto.
+La navegación y el estado compartido definidos durante el diseño ya se encuentran implementados en el prototipo actual.
+
+La propuesta basada en MVVM se mantiene únicamente como análisis de arquitectura. Su implementación se realizará posteriormente conforme avance el proyecto.
+
+La integración con Open Library, la persistencia local y las demás funcionalidades pendientes del MVP se desarrollarán progresivamente durante el proyecto.
 
 ## Ejecución del proyecto
 
@@ -386,4 +411,3 @@ La integración con Open Library, la persistencia local y las demás funcionalid
 2. Abrir `OpenBooks.xcodeproj` en Xcode.
 3. Seleccionar un simulador de iOS.
 4. Ejecutar el proyecto desde Xcode.
-

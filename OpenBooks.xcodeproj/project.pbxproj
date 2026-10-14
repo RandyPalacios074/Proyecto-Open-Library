@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B49C3576D7D4D588A2E11FD /* MockBooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146723884D8BBF1B20118515 /* MockBooks.swift */; };
 		7C66C4C58F197BC5957685A0 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */; };
 		80B77C2187440571B116FCC5 /* MyBooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */; };
 		938F937FC32C7D9F449B8361 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10231B95BFFBE1C6765DB48 /* HomeView.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		146723884D8BBF1B20118515 /* MockBooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBooks.swift; sourceTree = "<group>"; };
 		1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
 		20F8842AC2160C56AD5E3FE6 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetailView.swift; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 				2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */,
 				C3F55F04A70EDDC74EB0C28D /* ContentView.swift */,
 				A10231B95BFFBE1C6765DB48 /* HomeView.swift */,
+				146723884D8BBF1B20118515 /* MockBooks.swift */,
 				A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */,
 				DED88229DF037BF669500C58 /* OpenBooksApp.swift */,
 				1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */,
@@ -117,6 +120,7 @@
 				F7DC327706B2DEAB1005C560 /* BookDetailView.swift in Sources */,
 				ED02DC1AA9ABC7A1E6CE9347 /* ContentView.swift in Sources */,
 				938F937FC32C7D9F449B8361 /* HomeView.swift in Sources */,
+				3B49C3576D7D4D588A2E11FD /* MockBooks.swift in Sources */,
 				80B77C2187440571B116FCC5 /* MyBooksView.swift in Sources */,
 				B8664D3ACE2D806AB35A8592 /* OpenBooksApp.swift in Sources */,
 				7C66C4C58F197BC5957685A0 /* SearchResultsView.swift in Sources */,

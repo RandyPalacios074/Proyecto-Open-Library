@@ -4,7 +4,6 @@ struct HomeView: View {
     @Binding var searchText: String
     let books: [Book]
     let onSearch: () -> Void
-    let onBookSelected: (Int) -> Void
     let onMyBooks: () -> Void
 
     var body: some View {
@@ -28,10 +27,9 @@ struct HomeView: View {
                         VStack(spacing: 0) {
                             ForEach(0..<3) { index in
                                 BookRowView(
-                                    book: books[index]
-                                ) {
-                                    onBookSelected(index)
-                                }
+                                    book: books[index],
+                                    destination: index
+                                )
 
                                 if index < 2 {
                                     RoundedRectangle(cornerRadius: 0)
@@ -91,12 +89,10 @@ struct SearchFieldView: View {
 
 struct BookRowView: View {
     let book: Book
-    let onTap: () -> Void
+    let destination: Int
 
     var body: some View {
-        Button {
-            onTap()
-        } label: {
+        NavigationLink(value: destination) {
             HStack(spacing: 16) {
                 SmallBookCoverView(
                     hasCover: book.hasCover

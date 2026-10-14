@@ -4,7 +4,7 @@ struct BookDetailView: View {
     let book: Book
     let homeActive: Bool
 
-    let onBack: () -> Void
+
     let onSaveOrDelete: () -> Void
     let onHome: () -> Void
     let onMyBooks: () -> Void
@@ -13,13 +13,7 @@ struct BookDetailView: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    Button {
-                        onBack()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 24))
-                            .foregroundStyle(.black)
-                    }
+
 
                     Text("Detalle del libro")
                         .font(.largeTitle)
