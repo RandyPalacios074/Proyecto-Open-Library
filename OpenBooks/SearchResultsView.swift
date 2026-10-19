@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct SearchResultsView: View {
-    @Binding var searchText: String
+    let resultIndices: [Int]
     let books: [Book]
     let state: SearchViewState
 
 
-    let onSearch: () -> Void
+    let onOpenSearch: () -> Void
     let onRetry: () -> Void
     let onHome: () -> Void
     let onMyBooks: () -> Void
@@ -16,14 +16,22 @@ struct SearchResultsView: View {
             VStack(alignment: .leading, spacing: 20) {
 
 
-                Text("Resultados")
-                    .font(.largeTitle)
-                    .bold()
+                HStack {
+                    Text("Resultados")
+                        .font(.largeTitle)
+                        .bold()
 
-                SearchFieldView(
-                    text: $searchText,
-                    onSearch: onSearch
-                )
+                    Spacer()
+
+                    Button {
+                        onOpenSearch()
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 24))
+                            .foregroundStyle(.black)
+                    }
+                    .accessibilityLabel("Buscar libros")
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
@@ -42,39 +50,21 @@ struct SearchResultsView: View {
 
             case .content:
                 ScrollView {
-                    if searchText == "Orgullo y prejuicio" {
-                        VStack(spacing: 0) {
-                            ForEach(7..<10) { index in
-                                BookRowView(
-                                    book: books[index],
-                                    destination: index
-                                )
+                    VStack(spacing: 0) {
+                        ForEach(resultIndices, id: \.self) { index in
+                            BookRowView(
+                                book: books[index],
+                                destination: index
+                            )
 
-                                if index < 9 {
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 1)
-                                        .foregroundStyle(.gray)
-                                }
+                            if index != resultIndices.last {
+                                RoundedRectangle(cornerRadius: 0)
+                                    .frame(height: 1)
+                                    .foregroundStyle(.gray)
                             }
                         }
-                        .padding(.horizontal, 20)
-                    } else {
-                        VStack(spacing: 0) {
-                            ForEach(3..<7) { index in
-                                BookRowView(
-                                    book: books[index],
-                                    destination: index
-                                )
-
-                                if index < 6 {
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 1)
-                                        .foregroundStyle(.gray)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 20)
                     }
+                    .padding(.horizontal, 20)
                 }
 
             case .noResults:
