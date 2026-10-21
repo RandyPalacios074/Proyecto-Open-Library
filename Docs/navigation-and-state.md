@@ -11,8 +11,10 @@ La propuesta parte del MVP del proyecto y busca dejar claro qué pantallas exist
 Los flujos principales de OpenBooks son:
 
 - Inicio → lista de libros → Detalle del libro.
-- Buscar → Resultados → Detalle del libro.
+- Inicio → Buscar → Resultados → Detalle del libro.
+- Resultados → Buscar → Resultados.
 - Mis libros → libro guardado → Detalle del libro.
+- Mis libros → Buscar → Resultados.
 
 A partir de esos flujos, el mapa de navegación propuesto es:
 
@@ -26,19 +28,27 @@ OpenBooks
 │   │       ├── Regresar → Inicio
 │   │       └── Guardar libro → Mis libros
 │   │
-│   ├── Realizar búsqueda
-│   │   └── Resultados
-│   │       ├── Carga
-│   │       ├── Contenido
-│   │       │   └── Seleccionar un libro
-│   │       │       └── Detalle del libro
-│   │       │           ├── Regresar → Resultados
-│   │       │           └── Guardar libro → Mis libros
-│   │       ├── Sin resultados
-│   │       └── Error
+│   ├── Tocar lupa
+│   │   └── Buscar
+│   │       └── Escribir búsqueda y presionar Enter
+│   │           └── Resultados
+│   │               ├── Carga
+│   │               ├── Contenido
+│   │               │   └── Seleccionar un libro
+│   │               │       └── Detalle del libro
+│   │               │           ├── Regresar → Resultados
+│   │               │           └── Guardar libro → Mis libros
+│   │               ├── Sin resultados
+│   │               └── Error
 │   │
 │   └── Ir a Mis libros
 │       └── Mis libros
+│
+├── Resultados
+│   └── Tocar lupa
+│       └── Buscar
+│           └── Escribir búsqueda y presionar Enter
+│               └── Resultados
 │
 └── Mis libros
     │
@@ -49,12 +59,14 @@ OpenBooks
     │
     └── Lista vacía
         └── Buscar libros
-            └── Inicio
+            └── Buscar
+                └── Escribir búsqueda y presionar Enter
+                    └── Resultados
 ```
 
 **Detalle del libro** se repite dentro de los distintos recorridos únicamente para mostrar desde dónde puede abrirse y a qué pantalla regresa. Corresponde a una misma pantalla reutilizable y no a una tercera sección principal de la aplicación.
 
-Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**.
+Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**. En el prototipo, el estado sin resultados ya se utiliza; las vistas de carga y error están preparadas, pero todavía no se activan durante la búsqueda.
 
 De la misma forma, **Lista vacía** pertenece a **Mis libros** y **Sin portada** es una condición de presentación de un libro, no una pantalla adicional.
 
@@ -66,13 +78,13 @@ La navegación principal entre **Inicio** y **Mis libros** se mantiene mediante 
 
 ### Pantalla principal · Inicio
 
-**Propósito:**  
-Permitir al usuario comenzar una búsqueda, consultar la lista inicial de libros y acceder a Mis libros.
+**Propósito:**
+Permitir al usuario consultar la lista inicial de libros, abrir la búsqueda y acceder a Mis libros.
 
 **Muestra:**
 
 - Nombre de la aplicación.
-- Campo de búsqueda.
+- Botón de búsqueda representado por una lupa.
 - Lista inicial de libros.
 - Título y autor de cada libro.
 - Portada cuando esté disponible.
@@ -80,66 +92,93 @@ Permitir al usuario comenzar una búsqueda, consultar la lista inicial de libros
 
 **Recibe:**
 
-- El texto de búsqueda desde `ContentView`, que mantiene la fuente de verdad de este dato.
 - Libros que se mostrarán en la lista inicial.
 
 **Modifica:**
 
-- El texto de búsqueda compartido cuando el usuario escribe en el campo de búsqueda mediante `@Binding`.
-
-Las acciones de buscar, seleccionar un libro o entrar a Mis libros solicitan cambios de navegación a `ContentView`, que es donde actualmente se encuentra el estado que controla la pantalla mostrada.
+- No modifica directamente el texto de búsqueda.
+- Solicita cambios de navegación cuando el usuario abre Buscar, selecciona un libro o entra a Mis libros.
 
 **Necesita conservar:**
 
-- El texto de búsqueda mientras el usuario pasa de Inicio a Resultados.
+- No necesita conservar una copia propia del texto de búsqueda.
 
-El texto de búsqueda pertenece a `ContentView`. Inicio recibe acceso de lectura y escritura mediante `@Binding`, por lo que no mantiene una segunda copia del dato.
+Inicio ya no contiene un campo editable de búsqueda. La lupa funciona como una acción de navegación que abre la vista Buscar.
 
-Escribir en el campo únicamente modifica el texto de búsqueda. La búsqueda comienza cuando el usuario presiona el botón de la lupa.
+---
+
+### Buscar
+
+**Propósito:**
+Permitir al usuario escribir una consulta antes de mostrar los resultados.
+
+**Muestra:**
+
+- Campo de búsqueda.
+- Lupa como elemento visual dentro del campo.
+- Texto de búsqueda actual cuando exista.
+
+**Recibe:**
+
+- El texto de búsqueda que mantiene `SearchViewModel`, conectado desde `ContentView` mediante `@Bindable`.
+
+**Modifica:**
+
+- El texto de búsqueda mediante `@Binding`.
+- Solicita ejecutar la búsqueda cuando el usuario presiona Enter en el teclado.
+
+**Necesita conservar:**
+
+- El texto escrito hasta que se ejecute la búsqueda.
+
+`ContentView` mantiene una instancia de `SearchViewModel` mediante `@State`. El texto pertenece a ese ViewModel y Buscar lo puede editar mediante `@Binding`, proporcionado desde `ContentView` con `@Bindable`. Así se conserva una sola fuente de verdad para la consulta.
+
+Escribir únicamente modifica el texto. La búsqueda comienza cuando el usuario presiona Enter en el teclado.
 
 ---
 
 ### Resultados
 
-**Propósito:**  
-Mostrar el resultado de una búsqueda realizada en Open Library.
+**Propósito:**
+Mostrar el resultado de una búsqueda. Actualmente se utilizan libros de prueba; la conexión con Open Library se realizará después.
 
 **Muestra:**
 
-- Texto de la búsqueda.
-- Lista de libros encontrados.
-- Estado de carga.
+- Título de la pantalla: Resultados.
+- Lista de libros de prueba correspondiente a la consulta.
+- Vista de carga preparada, todavía no activada por la búsqueda actual.
 - Estado sin resultados.
-- Estado de error.
-- Acción para volver a intentar la búsqueda.
+- Vista de error preparada, todavía no activada por la búsqueda actual.
+- Acción para volver a intentar la búsqueda, dentro de la vista de error.
+- Botón de búsqueda representado por una lupa.
 
 **Recibe:**
 
-- El mismo texto de búsqueda compartido cuya fuente de verdad se encuentra en `ContentView`.
-- La colección de libros proporcionada por `ContentView`.
-- El estado actual de la búsqueda proporcionado por `ContentView`.
+- Los índices de los libros encontrados (`resultIndices`) obtenidos de `SearchViewModel`.
+- La colección de libros proporcionada desde `booksState.books`.
+- El estado de búsqueda (`state`) que mantiene `SearchViewModel`.
+
+Estos valores llegan a Resultados mediante `ContentView`.
 
 **Modifica:**
 
-- El texto de búsqueda compartido si el usuario escribe un nuevo valor mediante `@Binding`.
+- No modifica directamente el texto de búsqueda.
+- Solicita volver a ejecutar la búsqueda cuando el usuario utiliza Intentar nuevamente.
+- Solicita abrir Buscar cuando el usuario toca la lupa.
+- Solicita navegación cuando el usuario selecciona un libro.
 
-Resultados no modifica directamente el estado de la búsqueda. Cuando el usuario presiona el botón de la lupa o intenta nuevamente, la vista solicita una nueva búsqueda mediante la acción recibida desde `ContentView`. `ContentView` es quien ejecuta la búsqueda y actualiza el estado correspondiente.
-
-Resultados tampoco crea una copia independiente del texto. Recibe acceso al mismo dato mediante `@Binding`.
-
-Si el usuario cambia el texto, la nueva búsqueda no se realiza automáticamente. El texto queda actualizado y la búsqueda se ejecuta cuando el usuario presiona nuevamente el botón de la lupa.
+`SearchResultsView` ya no decide qué libros corresponden a la consulta. Recibe los índices que calculó `SearchViewModel` y muestra las filas de esos libros. Tampoco presenta el texto de la consulta como un encabezado independiente. Si el usuario quiere escribir otra búsqueda, vuelve a abrir Buscar mediante la lupa.
 
 **Necesita conservar:**
 
-- Texto de búsqueda.
-- Resultados obtenidos.
-- Estado de la búsqueda mientras el usuario entra a un detalle y posteriormente regresa.
+- Los índices de resultados y el estado de búsqueda, que permanecen en `SearchViewModel` mientras el usuario navega.
+- La colección compartida de libros, que se mantiene en `BooksState`. Por ahora no se descargan ni guardan resultados de una consulta externa.
 
 ---
 
 ### Detalle del libro
 
-**Propósito:**  
+**Propósito:**
 Mostrar la información del libro seleccionado y permitir guardarlo o eliminarlo de Mis libros.
 
 **Muestra:**
@@ -157,11 +196,11 @@ Mostrar la información del libro seleccionado y permitir guardarlo o eliminarlo
 **Modifica:**
 
 - No modifica directamente los datos del libro como título, autor, año o portada.
-- Cuando el usuario presiona Guardar libro o Eliminar de Mis libros, solicita a `ContentView` cambiar el estado `isSaved` del libro seleccionado.
+- Cuando el usuario presiona Guardar libro o Eliminar de Mis libros, solicita el cambio a `ContentView`, que llama a `BooksState`.
 
-`BookDetailView` muestra el libro recibido, pero la colección de libros y su estado de guardado pertenecen a `ContentView`.
+`BookDetailView` muestra el libro recibido. La colección compartida pertenece a `BooksState`, cuya instancia se mantiene en `ContentView`.
 
-La vista de detalle solicita el cambio mediante la acción `onSaveOrDelete`, y `ContentView` modifica el libro correspondiente dentro de la colección compartida.
+La vista de detalle solicita el cambio mediante `onSaveOrDelete`. Después, `ContentView` llama a `booksState.toggleSaved(at:)` para cambiar `isSaved` del libro seleccionado y navegar hacia Mis libros.
 
 **Necesita conservar:**
 
@@ -201,7 +240,7 @@ Mostrar los libros que el usuario ha marcado como guardados.
 - La fuente de verdad de esta información se encuentra en `BooksState`, cuya instancia es mantenida por `ContentView`. Mis libros solamente recibe la colección y la muestra.
 - Posteriormente, esta información deberá persistirse localmente para conservarse entre ejecuciones de la aplicación.
 
-Mis libros no es la pantalla encargada de guardar o eliminar libros. Cuando el usuario realiza esa acción desde Detalle, `ContentView` modifica `isSaved` dentro de `booksState.books`. Mis libros recibe después el estado actualizado y muestra los libros correspondientes.
+Mis libros no se encarga de guardar o eliminar libros. Cuando el usuario realiza esa acción desde Detalle, `ContentView` solicita el cambio a `BooksState` mediante `toggleSaved(at:)`. Mis libros recibe la colección actualizada y muestra los libros cuyo estado `isSaved` sea verdadero.
 
 ---
 
@@ -213,14 +252,15 @@ La organización propuesta es la siguiente:
 
 | Dato | Quién lo utiliza | Quién lo modifica | Dónde debería vivir | Justificación |
 | --- | --- | --- | --- | --- |
-| Texto de búsqueda | Inicio y Resultados | Usuario desde Inicio o Resultados | `ContentView` | `ContentView` mantiene una sola fuente de verdad mediante `@State`. Inicio y Resultados acceden al mismo texto mediante `@Binding`, evitando crear copias diferentes. |
-| Resultados de búsqueda | Resultados y Detalle | La lógica encargada de realizar la búsqueda | Estado compartido del flujo de búsqueda | Deben seguir disponibles si el usuario abre un detalle y después regresa a Resultados. |
-| Estado de búsqueda: loading, content, noResults o error | Resultados | La lógica de búsqueda | Estado compartido del flujo de búsqueda | La interfaz de Resultados depende directamente de este valor. Al cambiar, cambia lo que se muestra. |
-| Libros guardados | Mis libros y Detalle | `ContentView`, a partir de la acción solicitada desde Detalle | `BooksState` | Ambas vistas necesitan consultar el mismo estado. `BooksState` mantiene una sola fuente de verdad y `ContentView` actualiza el estado de guardado del libro seleccionado. |
-| Estado de guardado de un libro | Detalle y Mis libros | `ContentView`, cuando Detalle solicita guardar o eliminar | Dentro de `booksState.books` | El valor `isSaved` pertenece al libro almacenado en la colección compartida. Detalle lo muestra y solicita su cambio, pero no mantiene una copia independiente. |
-| Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Se pasa durante la navegación | Solo se necesita para abrir el detalle correspondiente; no es necesario mantener otra copia global permanente. |
-| Sección principal activa: Inicio o Mis libros | Barra inferior y vista raíz | Usuario al cambiar de sección | Estado local de la vista que contiene ambas secciones | La vista raíz es la responsable de esta decisión de navegación. |
-| Título, autor, año y portada | Inicio, Resultados, Detalle y Mis libros | Open Library o los datos locales de prueba | Modelo `Book` | Son datos propios del libro. Las vistas los reciben y los muestran, pero no necesitan crear una copia de estado por pantalla. |
+| Texto de búsqueda | Buscar; Resultados depende de la consulta ejecutada | Usuario desde Buscar, mediante `@Binding` | `SearchViewModel.searchText` | `SearchViewModel` mantiene una sola fuente de verdad; `ContentView` conecta Buscar mediante `@Bindable`. |
+| Resultados de búsqueda | Resultados y Detalle | `SearchViewModel`, al ejecutar `searchBooks()` | `SearchViewModel.resultIndices` | El ViewModel determina los índices de los libros de prueba. Resultados recibe esos índices y la colección de `BooksState` para mostrar las filas. |
+| Estado de búsqueda: loading, content, noResults o error | Resultados | `SearchViewModel`, mediante `searchBooks()` | `SearchViewModel.state` | Actualmente `searchBooks()` asigna `.content` o `.noResults`. Las vistas de carga y error existen, pero aún no se activan durante la búsqueda. |
+| Libros guardados | Mis libros y Detalle | `BooksState`, cuando `ContentView` solicita guardar o eliminar | `BooksState.books` | La misma colección se comparte entre las vistas; `BooksState` es responsable del cambio de guardado mediante `toggleSaved(at:)`. |
+| Estado de guardado de un libro | Detalle y Mis libros | `BooksState.toggleSaved(at:)` | `isSaved` dentro de `booksState.books` | Detalle solicita la acción, pero no conserva una segunda copia del estado. |
+| Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Índice `Int` durante la navegación | `NavigationLink` envía el índice; `ContentView` obtiene el `Book` de `booksState.books` y lo entrega a Detalle. |
+| Sección principal activa: Inicio o Mis libros | Barra inferior y vista raíz | Usuario al cambiar de sección | `ContentView.showingMyBooks` | La vista raíz mantiene esta selección mediante `@State` porque controla las dos secciones principales. |
+| Ruta de navegación | `ContentView` y destinos de navegación | Acciones del usuario coordinadas por `ContentView` | `ContentView.path` | `NavigationStack` utiliza esta ruta para abrir Buscar, Resultados y Detalle. |
+| Título, autor, año y disponibilidad de portada | Inicio, Resultados, Detalle y Mis libros | Actualmente, datos locales de prueba; más adelante, Open Library | Modelo `Book` | Son datos propios del libro. `hasCover` indica si aparece un marcador provisional o el estado «Sin portada»; todavía no se descargan portadas reales. |
 
 ### Estado local y estado compartido
 
@@ -231,8 +271,8 @@ Se considera **estado compartido** cuando varias vistas necesitan leerlo o cuand
 Para OpenBooks:
 
 - La colección de libros guardados debe ser compartida.
-- Los resultados y el estado de una búsqueda deben mantenerse durante el flujo de búsqueda.
-- El texto de búsqueda debe compartirse entre Inicio y Resultados.
+- Los resultados y el estado de una búsqueda se mantienen en `SearchViewModel` durante el flujo de búsqueda.
+- El texto de búsqueda se mantiene en `SearchViewModel` y Buscar lo modifica mediante `@Binding`.
 - La selección de la sección principal puede pertenecer a la vista raíz.
 - El libro seleccionado puede viajar como información de navegación hacia Detalle.
 
@@ -246,11 +286,13 @@ Por eso, la colección de libros guardados debe ser la fuente de verdad.
 
 Actualmente, la colección compartida se encuentra organizada en `BooksState`, un objeto `@Observable`, lo que permite mantener una sola fuente de verdad para los libros utilizados por las diferentes vistas.
 
-`ContentView` mantiene una instancia de `BooksState`. Cuando el usuario guarda o elimina un libro desde Detalle, se modifica `isSaved` dentro de `booksState.books`. Después, Mis libros utiliza esa misma colección actualizada.
+`ContentView` mantiene una instancia de `BooksState`. Cuando el usuario guarda o elimina un libro desde Detalle, `ContentView` llama a `booksState.toggleSaved(at:)`. `BooksState` modifica `isSaved` y Mis libros utiliza la misma colección actualizada.
 
 De esta forma, Detalle y Mis libros trabajan con el mismo estado y no necesitan mantener copias independientes de la información de guardado.
 
-La idea es que cada dato viva en el nivel más bajo desde el que pueda compartirse correctamente, sin duplicar la fuente de verdad.
+La búsqueda sigue la misma idea: `ContentView` mantiene una instancia de `SearchViewModel` mediante `@State`, pero el texto, los índices y el estado de búsqueda pertenecen al ViewModel. Buscar modifica el texto con un `@Binding` sin crear otra copia.
+
+La idea es que cada dato tenga un responsable claro y pueda compartirse sin duplicar su fuente de verdad.
 
 ### Persistencia
 
@@ -278,8 +320,10 @@ Su función es mantener una pila de vistas. Cuando se abre una pantalla nueva, e
 Esto resulta adecuado para recorridos como:
 
 - Inicio → Detalle.
-- Inicio → Resultados → Detalle.
+- Inicio → Buscar → Resultados → Detalle.
+- Resultados → Buscar → Resultados.
 - Mis libros → Detalle.
+- Mis libros → Buscar → Resultados.
 
 Además, evita tener que guardar manualmente una copia de la pantalla anterior solo para saber a dónde regresar.
 
@@ -293,7 +337,7 @@ En OpenBooks puede utilizarse para:
 - Abrir el detalle de un resultado.
 - Abrir el detalle de un libro guardado.
 
-La información que necesita la pantalla siguiente debe viajar con la navegación. En estos casos, Detalle necesita recibir el libro seleccionado.
+En la implementación actual, cada fila usa `NavigationLink` con un índice `Int` que identifica al libro. `ContentView` obtiene el elemento correspondiente de `booksState.books` y lo entrega a `BookDetailView` para mostrar el detalle.
 
 ### navigationDestination
 
@@ -301,9 +345,9 @@ La información que necesita la pantalla siguiente debe viajar con la navegació
 
 Para OpenBooks resulta útil porque **Detalle del libro es una misma pantalla que puede abrirse desde diferentes lugares**: Inicio, Resultados y Mis libros.
 
-En lugar de diseñar tres pantallas de detalle diferentes, se mantiene una sola pantalla y se le proporciona la información del libro seleccionado.
+En lugar de diseñar tres pantallas de detalle diferentes, se mantiene una sola pantalla. `navigationDestination` recibe el índice y `ContentView` le proporciona el libro correspondiente a `BookDetailView`.
 
-También puede utilizarse para organizar destinos del flujo de búsqueda cuando la navegación dependa del estado o de una acción realizada por el usuario.
+También se utiliza para organizar los destinos del flujo de búsqueda. En la implementación actual, la ruta puede abrir Buscar o Resultados según la acción realizada por el usuario.
 
 ### Navegación entre Inicio y Mis libros
 
@@ -320,6 +364,8 @@ Cuando el usuario abra Detalle mediante una navegación apilada, el regreso pued
 Los casos principales son:
 
 - Inicio → Detalle → regresar a Inicio.
+- Inicio → Buscar → regresar a Inicio si el usuario no realiza una búsqueda.
+- Resultados → Buscar → regresar a Resultados si el usuario no realiza una nueva búsqueda.
 - Resultados → Detalle → regresar a Resultados.
 - Mis libros → Detalle → regresar a Mis libros.
 
@@ -328,7 +374,7 @@ Los casos principales son:
 Cuando el usuario guarde o elimine un libro:
 
 1. Detalle solicita guardar o eliminar el libro.
-2. `ContentView` modifica `isSaved` del libro seleccionado dentro de `booksState.books`.
+2. `ContentView` solicita a `BooksState` el cambio mediante `toggleSaved(at:)`.
 3. Mis libros utiliza ese mismo estado compartido.
 4. La interfaz de Mis libros refleja el cambio.
 5. De acuerdo con el flujo definido para el proyecto, el usuario puede continuar hacia Mis libros.
@@ -343,13 +389,15 @@ Las decisiones de navegación y organización del estado definidas anteriormente
 
 La aplicación utiliza `NavigationStack` como contenedor del flujo principal y una ruta almacenada en `ContentView` para representar los destinos que se encuentran dentro de la pila de navegación.
 
-Las filas de libros utilizan `NavigationLink` para abrir el detalle correspondiente y `navigationDestination` relaciona los valores de navegación con las pantallas de Resultados y Detalle.
+Las filas de libros utilizan `NavigationLink` para abrir el detalle correspondiente y `navigationDestination` relaciona los valores de navegación con las pantallas Buscar, Resultados y Detalle.
 
-El texto de búsqueda continúa compartiéndose mediante `@Binding` entre las vistas que necesitan leerlo o modificarlo.
+Inicio y Resultados muestran una lupa que abre la vista Buscar. El campo editable se encuentra únicamente en Buscar. El texto pertenece a `SearchViewModel`, que `ContentView` mantiene mediante `@State`. Buscar lo modifica con `@Binding`, conectado mediante `@Bindable`. Resultados recibe los índices de los libros seleccionados por el ViewModel, sin mostrar la consulta como un encabezado independiente.
+
+Cuando el usuario presiona Enter desde Buscar, `ContentView` llama a `searchViewModel.searchBooks()` y actualiza la ruta para mostrar Resultados. El ViewModel reconoce las consultas «Harry Potter» y «Orgullo y prejuicio», establece los índices de los libros de prueba y asigna `.content` o `.noResults`. No realiza solicitudes a Open Library ni activa los estados de carga o error.
 
 Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `ContentView` mantiene una instancia de este estado y proporciona la misma colección a las vistas que la necesitan.
 
-Cuando el usuario guarda o elimina un libro desde Detalle, se modifica `isSaved` dentro de `booksState.books`. Después, Mis libros utiliza esa misma colección actualizada.
+Cuando el usuario guarda o elimina un libro desde Detalle, `ContentView` utiliza `booksState.toggleSaved(at:)` para solicitar el cambio. `BooksState` modifica `isSaved` y Mis libros recibe la misma colección actualizada.
 
 De esta forma existe una sola fuente de verdad para el estado de guardado y el cambio realizado en una vista puede reflejarse en otra.
 
@@ -358,12 +406,14 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 ## 6. Decisiones principales
 
 1. **Inicio será la pantalla inicial.**
-2. **Resultados será una sola pantalla con diferentes estados**, no una pantalla diferente para carga, error o sin resultados.
-3. **Detalle del libro será reutilizable** sin importar si se abre desde Inicio, Resultados o Mis libros.
-4. **Mis libros vacío será un estado de Mis libros**, no una pantalla independiente.
-5. **Sin portada será una condición del libro**, no una pantalla.
-6. **Los libros guardados tendrán una sola fuente de verdad compartida**.
-7. **El texto de búsqueda y los resultados deberán mantenerse durante el flujo de búsqueda**.
-8. **El libro seleccionado viajará hacia Detalle como información de navegación**.
-9. **`NavigationStack`, `NavigationLink` y `navigationDestination` son los mecanismos utilizados para organizar el flujo en SwiftUI**.
-10. **Las decisiones de navegación y estado definidas en este documento ya se encuentran aplicadas en la implementación actual del proyecto**.
+2. **Buscar será una vista dedicada para escribir la consulta** y se abrirá desde la lupa de Inicio, Resultados o la acción Buscar libros de Mis libros.
+3. **La búsqueda se ejecutará al presionar Enter en el teclado** desde la vista Buscar.
+4. **Resultados será una sola pantalla con diferentes estados**, no una pantalla diferente para carga, error o sin resultados.
+5. **Detalle del libro será reutilizable** sin importar si se abre desde Inicio, Resultados o Mis libros.
+6. **Mis libros vacío será un estado de Mis libros**, no una pantalla independiente.
+7. **Sin portada será una condición del libro**, no una pantalla.
+8. **Los libros guardados tendrán una sola fuente de verdad compartida**.
+9. **El texto y el estado de búsqueda pertenecen a `SearchViewModel`**; Buscar modifica el texto mediante `@Binding` y `ContentView` conserva la navegación.
+10. **El libro seleccionado viajará hacia Detalle como información de navegación**.
+11. **`NavigationStack`, `NavigationLink` y `navigationDestination` son los mecanismos utilizados para organizar el flujo en SwiftUI**.
+12. **La organización de responsabilidades se realiza de forma gradual**: `SearchViewModel` concentra la búsqueda y `BooksState` contiene la operación de guardar o eliminar. La integración con Open Library y la persistencia siguen pendientes.

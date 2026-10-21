@@ -3,13 +3,15 @@ import SwiftUI
 struct ContentView: View {
     @State var path: [Int] = []
     @State var showingMyBooks: Bool = false
-    @State var searchText: String = ""
-    @State var searchViewState: SearchViewState = .content
+    @State var searchViewModel = SearchViewModel()
     @State var booksState = BooksState()
 
     let resultsRoute: Int = -1
+    let searchRoute: Int = -2
 
     var body: some View {
+        @Bindable var search = searchViewModel
+
         NavigationStack(path: $path) {
             ZStack {
                 if showingMyBooks {
@@ -20,14 +22,14 @@ struct ContentView: View {
                         },
                         onSearch: {
                             showingMyBooks = false
+                            path.append(searchRoute)
                         }
                     )
                 } else {
                     HomeView(
-                        searchText: $searchText,
                         books: booksState.books,
-                        onSearch: {
-                            searchBooks()
+                        onOpenSearch: {
+                            path.append(searchRoute)
                         },
                         onMyBooks: {
                             showingMyBooks = true
@@ -36,13 +38,20 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(for: Int.self) { route in
-                if route == resultsRoute {
-                    SearchResultsView(
-                        searchText: $searchText,
-                        books: booksState.books,
-                        state: searchViewState,
+                if route == searchRoute {
+                    SearchView(
+                        searchText: $search.searchText,
                         onSearch: {
                             searchBooks()
+                        }
+                    )
+                } else if route == resultsRoute {
+                    SearchResultsView(
+                        resultIndices: searchViewModel.resultIndices,
+                        books: booksState.books,
+                        state: searchViewModel.state,
+                        onOpenSearch: {
+                            path.append(searchRoute)
                         },
                         onRetry: {
                             searchBooks()
@@ -62,7 +71,7 @@ struct ContentView: View {
                         homeActive: !showingMyBooks,
 
                         onSaveOrDelete: {
-                            booksState.books[route].isSaved.toggle()
+                            booksState.toggleSaved(at: route)
                             path = []
                             showingMyBooks = true
                         },
@@ -81,16 +90,7 @@ struct ContentView: View {
     }
 
     func searchBooks() {
-        if searchText == "Harry Potter" {
-            searchViewState = .content
-        } else if searchText == "Orgullo y prejuicio" {
-            searchViewState = .content
-        } else {
-            searchViewState = .noResults
-        }
-
-        if path.isEmpty {
-            path.append(resultsRoute)
-        }
+        searchViewModel.searchBooks()
+        path = [resultsRoute]
     }
 }

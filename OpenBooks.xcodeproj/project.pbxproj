@@ -15,6 +15,7 @@
 		D16D5863C9CFDED9C641AFE1 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F8842AC2160C56AD5E3FE6 /* Book.swift */; };
 		ED02DC1AA9ABC7A1E6CE9347 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F55F04A70EDDC74EB0C28D /* ContentView.swift */; };
 		F7DC327706B2DEAB1005C560 /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */; };
+		B4D7FE0A9635C210E74D85F9 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90FDE216758C43D9A00BFE /* SearchViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBooksView.swift; sourceTree = "<group>"; };
 		C3F55F04A70EDDC74EB0C28D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DED88229DF037BF669500C58 /* OpenBooksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBooksApp.swift; sourceTree = "<group>"; };
+		AB90FDE216758C43D9A00BFE /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -49,8 +51,17 @@
 				A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */,
 				DED88229DF037BF669500C58 /* OpenBooksApp.swift */,
 				1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */,
+				C8D19E273F604BA5AF167002 /* ViewModels */,
 			);
 			path = OpenBooks;
+			sourceTree = "<group>";
+		};
+		C8D19E273F604BA5AF167002 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AB90FDE216758C43D9A00BFE /* SearchViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		A80989A7527ECD98F99711BD = {
@@ -124,6 +135,7 @@
 				80B77C2187440571B116FCC5 /* MyBooksView.swift in Sources */,
 				B8664D3ACE2D806AB35A8592 /* OpenBooksApp.swift in Sources */,
 				7C66C4C58F197BC5957685A0 /* SearchResultsView.swift in Sources */,
+				B4D7FE0A9635C210E74D85F9 /* SearchViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
