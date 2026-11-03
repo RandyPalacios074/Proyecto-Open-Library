@@ -15,7 +15,19 @@
 		D16D5863C9CFDED9C641AFE1 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F8842AC2160C56AD5E3FE6 /* Book.swift */; };
 		ED02DC1AA9ABC7A1E6CE9347 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F55F04A70EDDC74EB0C28D /* ContentView.swift */; };
 		F7DC327706B2DEAB1005C560 /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */; };
-		B4D7FE0A9635C210E74D85F9 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90FDE216758C43D9A00BFE /* SearchViewModel.swift */; };
+		2CC9F47EC05A430DB1C808AA /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4162582EFACD4411B74333E4 /* SearchViewModel.swift */; };
+		968DCB991EE34ECDAF55CC12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EC06E7ADD4840E4857405D2 /* Assets.xcassets */; };
+		0E3FEAF1A421572185BEC7DD /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3340E7E59840517A985DAABC /* SearchView.swift */; };
+		FBFB941AD82550EAB37B2E4B /* BookRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54058A89A15250CEA350B0C1 /* BookRowView.swift */; };
+		17FC5D3538DF5627A7888809 /* BookCoverArtworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9669C2BD8E85BA3997576E1 /* BookCoverArtworkView.swift */; };
+		3F54B3ACD0515E36A2BD9658 /* BottomNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6BFE13061955689F0F4635 /* BottomNavigationView.swift */; };
+		335F56DFE92258338BDB8C5C /* EmptyMyBooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6922567E485F84891ED820 /* EmptyMyBooksView.swift */; };
+		40D021A71AE35AD997A61563 /* BooksState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466C127878D45AA48BE84250 /* BooksState.swift */; };
+		AF44FD8311385EC8A220D65E /* SearchViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8380A533FCE5651869214D2 /* SearchViewState.swift */; };
+		D781FF60420F4B4C8B5EF202 /* SavedBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF201 /* SavedBook.swift */; };
+		D781FF60420F4B4C8B5EF204 /* SavedBooksRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF203 /* SavedBooksRepository.swift */; };
+		D781FF60420F4B4C8B5EF208 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */; };
+		D781FF60420F4B4C8B5EF20A /* SavedBooksRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +40,20 @@
 		A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBooksView.swift; sourceTree = "<group>"; };
 		C3F55F04A70EDDC74EB0C28D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DED88229DF037BF669500C58 /* OpenBooksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBooksApp.swift; sourceTree = "<group>"; };
-		AB90FDE216758C43D9A00BFE /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		4162582EFACD4411B74333E4 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		2EC06E7ADD4840E4857405D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3340E7E59840517A985DAABC /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		54058A89A15250CEA350B0C1 /* BookRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRowView.swift; sourceTree = "<group>"; };
+		A9669C2BD8E85BA3997576E1 /* BookCoverArtworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookCoverArtworkView.swift; sourceTree = "<group>"; };
+		9E6BFE13061955689F0F4635 /* BottomNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationView.swift; sourceTree = "<group>"; };
+		CB6922567E485F84891ED820 /* EmptyMyBooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMyBooksView.swift; sourceTree = "<group>"; };
+		466C127878D45AA48BE84250 /* BooksState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksState.swift; sourceTree = "<group>"; };
+		B8380A533FCE5651869214D2 /* SearchViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewState.swift; sourceTree = "<group>"; };
+		D781FF60420F4B4C8B5EF201 /* SavedBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedBook.swift; sourceTree = "<group>"; };
+		D781FF60420F4B4C8B5EF203 /* SavedBooksRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedBooksRepository.swift; sourceTree = "<group>"; };
+		D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
+		D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedBooksRepositoryTests.swift; sourceTree = "<group>"; };
+		D781FF60420F4B4C8B5EF20B /* OpenBooksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBooksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -36,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				95E0745A67E4C05152388D91 /* OpenBooks.app */,
+				D781FF60420F4B4C8B5EF20B /* OpenBooksTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -43,23 +69,65 @@
 		2A6FE6AE64AC98B08135EA4F /* OpenBooks */ = {
 			isa = PBXGroup;
 			children = (
-				20F8842AC2160C56AD5E3FE6 /* Book.swift */,
-				2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */,
-				C3F55F04A70EDDC74EB0C28D /* ContentView.swift */,
-				A10231B95BFFBE1C6765DB48 /* HomeView.swift */,
-				146723884D8BBF1B20118515 /* MockBooks.swift */,
-				A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */,
 				DED88229DF037BF669500C58 /* OpenBooksApp.swift */,
-				1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */,
-				C8D19E273F604BA5AF167002 /* ViewModels */,
+				D4670C44B31F5AF785CA54D9 /* Models */,
+				4174006B35405C43A2F46785 /* Views */,
+				2105600932F8415DA0B391CF /* ViewModels */,
+				D781FF60420F4B4C8B5EF205 /* Services */,
+				BC85002D42BC5F23A625AFB7 /* Mocks */,
+				2EC06E7ADD4840E4857405D2 /* Assets.xcassets */,
 			);
 			path = OpenBooks;
 			sourceTree = "<group>";
 		};
-		C8D19E273F604BA5AF167002 /* ViewModels */ = {
+		D4670C44B31F5AF785CA54D9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AB90FDE216758C43D9A00BFE /* SearchViewModel.swift */,
+				20F8842AC2160C56AD5E3FE6 /* Book.swift */,
+				D781FF60420F4B4C8B5EF201 /* SavedBook.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4174006B35405C43A2F46785 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C3F55F04A70EDDC74EB0C28D /* ContentView.swift */,
+				A10231B95BFFBE1C6765DB48 /* HomeView.swift */,
+				3340E7E59840517A985DAABC /* SearchView.swift */,
+				A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */,
+				2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */,
+				1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */,
+				6BEEDE6C0A35545EBE595F4F /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6BEEDE6C0A35545EBE595F4F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				54058A89A15250CEA350B0C1 /* BookRowView.swift */,
+				A9669C2BD8E85BA3997576E1 /* BookCoverArtworkView.swift */,
+				9E6BFE13061955689F0F4635 /* BottomNavigationView.swift */,
+				CB6922567E485F84891ED820 /* EmptyMyBooksView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		BC85002D42BC5F23A625AFB7 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				146723884D8BBF1B20118515 /* MockBooks.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		2105600932F8415DA0B391CF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				4162582EFACD4411B74333E4 /* SearchViewModel.swift */,
+				466C127878D45AA48BE84250 /* BooksState.swift */,
+				B8380A533FCE5651869214D2 /* SearchViewState.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -68,11 +136,39 @@
 			isa = PBXGroup;
 			children = (
 				2A6FE6AE64AC98B08135EA4F /* OpenBooks */,
+				D781FF60420F4B4C8B5EF206 /* OpenBooksTests */,
 				28112C54162A39F507F76F2C /* Products */,
 			);
 			sourceTree = "<group>";
 		};
+		D781FF60420F4B4C8B5EF205 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D781FF60420F4B4C8B5EF203 /* SavedBooksRepository.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D781FF60420F4B4C8B5EF206 /* OpenBooksTests */ = {
+			isa = PBXGroup;
+			children = (
+				D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */,
+				D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */,
+			);
+			path = OpenBooksTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		D781FF60420F4B4C8B5EF211 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D77682A3C01630D275BDBE94 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F30737AB1761B858C23015D5;
+			remoteInfo = OpenBooks;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXNativeTarget section */
 		F30737AB1761B858C23015D5 /* OpenBooks */ = {
@@ -80,6 +176,7 @@
 			buildConfigurationList = 9B424E32291D31832A556EBA /* Build configuration list for PBXNativeTarget "OpenBooks" */;
 			buildPhases = (
 				A9390473F0C2692897DE3817 /* Sources */,
+				FBD4DE49FAC648D69CB5F56C /* Resources */,
 			);
 			buildRules = (
 			);
@@ -92,7 +189,31 @@
 			productReference = 95E0745A67E4C05152388D91 /* OpenBooks.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D781FF60420F4B4C8B5EF20C /* OpenBooksTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D781FF60420F4B4C8B5EF210 /* Build configuration list for PBXNativeTarget "OpenBooksTests" */;
+			buildPhases = (
+				D781FF60420F4B4C8B5EF20D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D781FF60420F4B4C8B5EF212 /* PBXTargetDependency */,
+			);
+			name = OpenBooksTests;
+			productName = OpenBooksTests;
+			productReference = D781FF60420F4B4C8B5EF20B /* OpenBooksTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXTargetDependency section */
+		D781FF60420F4B4C8B5EF212 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F30737AB1761B858C23015D5 /* OpenBooks */;
+			targetProxy = D781FF60420F4B4C8B5EF211 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		D77682A3C01630D275BDBE94 /* Project object */ = {
@@ -118,9 +239,21 @@
 			projectRoot = "";
 			targets = (
 				F30737AB1761B858C23015D5 /* OpenBooks */,
+				D781FF60420F4B4C8B5EF20C /* OpenBooksTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FBD4DE49FAC648D69CB5F56C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				968DCB991EE34ECDAF55CC12 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A9390473F0C2692897DE3817 /* Sources */ = {
@@ -135,7 +268,25 @@
 				80B77C2187440571B116FCC5 /* MyBooksView.swift in Sources */,
 				B8664D3ACE2D806AB35A8592 /* OpenBooksApp.swift in Sources */,
 				7C66C4C58F197BC5957685A0 /* SearchResultsView.swift in Sources */,
-				B4D7FE0A9635C210E74D85F9 /* SearchViewModel.swift in Sources */,
+				2CC9F47EC05A430DB1C808AA /* SearchViewModel.swift in Sources */,
+				0E3FEAF1A421572185BEC7DD /* SearchView.swift in Sources */,
+				FBFB941AD82550EAB37B2E4B /* BookRowView.swift in Sources */,
+				17FC5D3538DF5627A7888809 /* BookCoverArtworkView.swift in Sources */,
+				3F54B3ACD0515E36A2BD9658 /* BottomNavigationView.swift in Sources */,
+				335F56DFE92258338BDB8C5C /* EmptyMyBooksView.swift in Sources */,
+				40D021A71AE35AD997A61563 /* BooksState.swift in Sources */,
+				AF44FD8311385EC8A220D65E /* SearchViewState.swift in Sources */,
+				D781FF60420F4B4C8B5EF202 /* SavedBook.swift in Sources */,
+				D781FF60420F4B4C8B5EF204 /* SavedBooksRepository.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D781FF60420F4B4C8B5EF20D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D781FF60420F4B4C8B5EF208 /* SearchViewModelTests.swift in Sources */,
+				D781FF60420F4B4C8B5EF20A /* SavedBooksRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +446,48 @@
 			};
 			name = Release;
 		};
+		D781FF60420F4B4C8B5EF20E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.openbooks.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenBooks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenBooks";
+			};
+			name = Debug;
+		};
+		D781FF60420F4B4C8B5EF20F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.openbooks.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenBooks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenBooks";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -312,6 +505,15 @@
 			buildConfigurations = (
 				96596BD101CF80CA25B7AFE9 /* Debug */,
 				D40BB3839AB3D21DCA3E15DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D781FF60420F4B4C8B5EF210 /* Build configuration list for PBXNativeTarget "OpenBooksTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D781FF60420F4B4C8B5EF20E /* Debug */,
+				D781FF60420F4B4C8B5EF20F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

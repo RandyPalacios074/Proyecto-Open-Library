@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct OpenBooksApp: App {
@@ -6,5 +7,6 @@ struct OpenBooksApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: SavedBook.self)
     }
 }

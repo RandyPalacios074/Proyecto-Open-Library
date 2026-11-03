@@ -5,7 +5,6 @@ struct SearchResultsView: View {
     let books: [Book]
     let state: SearchViewState
 
-
     let onOpenSearch: () -> Void
     let onRetry: () -> Void
     let onHome: () -> Void
@@ -15,9 +14,9 @@ struct SearchResultsView: View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 20) {
 
-
                 HStack {
                     Text("Resultados")
+                        .foregroundStyle(Color("Ink"))
                         .font(.largeTitle)
                         .bold()
 
@@ -28,7 +27,7 @@ struct SearchResultsView: View {
                     } label: {
                         Image(systemName: "magnifyingglass")
                             .font(.system(size: 24))
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color("Ink"))
                     }
                     .accessibilityLabel("Buscar libros")
                 }
@@ -60,7 +59,7 @@ struct SearchResultsView: View {
                             if index != resultIndices.last {
                                 RoundedRectangle(cornerRadius: 0)
                                     .frame(height: 1)
-                                    .foregroundStyle(.gray)
+                                    .foregroundStyle(Color("Muted"))
                             }
                         }
                     }
@@ -96,6 +95,7 @@ struct SearchResultsView: View {
                 onMyBooks: onMyBooks
             )
         }
+        .background(Color("Canvas").ignoresSafeArea())
     }
 }
 
@@ -107,7 +107,7 @@ struct LoadingResultsView: View {
 
                 Image(systemName: "hourglass")
                     .font(.system(size: 50))
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -125,7 +125,7 @@ struct LoadingResultsView: View {
                 Spacer()
 
                 Text("Esto puede tardar unos segundos.")
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -141,7 +141,7 @@ struct NoResultsView: View {
 
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 50))
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -160,7 +160,7 @@ struct NoResultsView: View {
                 Spacer()
 
                 Text("Intenta realizar otra búsqueda.")
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -178,7 +178,7 @@ struct SearchErrorView: View {
 
                 Image(systemName: "exclamationmark.circle")
                     .font(.system(size: 50))
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -197,7 +197,7 @@ struct SearchErrorView: View {
                 Spacer()
 
                 Text("Ocurrió un error al obtener los resultados.")
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -206,7 +206,7 @@ struct SearchErrorView: View {
                 Spacer()
 
                 Text("Intenta nuevamente.")
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -218,12 +218,12 @@ struct SearchErrorView: View {
                     Spacer()
 
                     Text("Intentar nuevamente")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("Canvas"))
 
                     Spacer()
                 }
                 .padding(.vertical, 14)
-                .background(.black)
+                .background(Color("Accent"))
                 .clipShape(
                     RoundedRectangle(cornerRadius: 14)
                 )

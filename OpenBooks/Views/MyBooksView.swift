@@ -9,7 +9,8 @@ struct MyBooksView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Mis libros")
+                Text("Mis favoritos")
+                    .foregroundStyle(Color("Ink"))
                     .font(.largeTitle)
                     .bold()
 
@@ -32,7 +33,7 @@ struct MyBooksView: View {
                                 if hasSavedBookAfter(index: index) {
                                     RoundedRectangle(cornerRadius: 0)
                                         .frame(height: 1)
-                                        .foregroundStyle(.gray)
+                                        .foregroundStyle(Color("Muted"))
                                 }
                             }
                         }
@@ -58,6 +59,7 @@ struct MyBooksView: View {
                 onMyBooks: {}
             )
         }
+        .background(Color("Canvas").ignoresSafeArea())
     }
 
     func hasSavedBooks() -> Bool {
@@ -78,68 +80,5 @@ struct MyBooksView: View {
         }
 
         return false
-    }
-}
-
-struct EmptyMyBooksView: View {
-    let onSearch: () -> Void
-
-    var body: some View {
-        VStack(spacing: 18) {
-            HStack {
-                Spacer()
-
-                Image(systemName: "book")
-                    .font(.system(size: 60))
-                    .foregroundStyle(.gray)
-
-                Spacer()
-            }
-
-            HStack {
-                Spacer()
-
-                Text("Todavía no tienes libros guardados")
-                    .font(.system(size: 20))
-                    .bold()
-
-                Spacer()
-            }
-
-            HStack {
-                Spacer()
-
-                Text("Busca un libro y guárdalo para verlo aquí.")
-                    .foregroundStyle(.gray)
-
-                Spacer()
-            }
-
-            Button {
-                onSearch()
-            } label: {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14)
-                        .foregroundStyle(.black)
-
-                    HStack {
-                        Spacer()
-
-                        Text("Buscar libros")
-                            .font(.system(size: 18))
-                            .foregroundStyle(.black)
-
-                        Spacer()
-                    }
-                    .padding(.vertical, 14)
-                    .background(.white)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 13)
-                    )
-                    .padding(1)
-                }
-                .frame(height: 52)
-            }
-        }
     }
 }
