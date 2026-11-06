@@ -11,42 +11,42 @@
 
 ## Descripción del proyecto
 
-OpenBooks es una aplicación iOS que permitirá buscar libros mediante Open Library, consultar la información básica de cada libro y administrar una colección personal de libros guardados.
+OpenBooks es una aplicación para iOS desarrollada con Swift y SwiftUI. Permite explorar libros, consultar su información y administrar una colección personal de favoritos.
 
-La aplicación se desarrollará principalmente con SwiftUI.
+Por ahora utilizamos libros de prueba incluidos en el proyecto. La conexión con Open Library todavía está pendiente. Los favoritos sí se guardan localmente con SwiftData para que sigan disponibles cuando se cierre y se vuelva a abrir la aplicación.
 
 ## Objetivo
 
-Permitir que el usuario explore y busque libros, consulte sus datos principales y pueda guardar o eliminar libros de una colección personal.
+Permitir que el usuario encuentre libros, consulte su información y pueda agregarlos o quitarlos de sus favoritos. También buscamos que la aplicación sea sencilla de usar y que los libros guardados permanezcan disponibles al volver a abrirla.
 
 ## Funcionalidades del MVP
 
-La aplicación incluirá:
+Las funciones que consideramos para el proyecto y su estado actual son:
 
 - Una pantalla principal con una lista de libros.
-- Búsqueda de libros mediante Open Library.
+- Búsqueda local con libros de prueba. La consulta a Open Library queda pendiente.
 - Visualización de resultados de búsqueda.
 - Visualización del detalle de cada libro.
 - Portada del libro cuando esté disponible.
 - Título del libro.
 - Autor o autores.
 - Año de publicación cuando esté disponible.
-- Opción para guardar libros.
-- Opción para eliminar libros guardados.
-- Una sección llamada **Mis libros**.
-- Persistencia local de los libros guardados.
-- Manejo de estados de carga.
-- Manejo de errores.
+- Opción para agregar libros a Mis favoritos.
+- Opción para quitar libros de Mis favoritos.
+- Una sección llamada **Mis favoritos**.
+- Persistencia local de los favoritos con SwiftData.
+- Una vista de carga preparada para cuando se incorpore Open Library.
+- Una vista de error preparada para cuando se incorpore Open Library.
 - Manejo de búsquedas sin resultados.
 - Manejo de libros sin portada.
 - Manejo del estado de lista de libros guardados vacía.
 
 ## Flujo de usuario
 
-La aplicación tendrá dos secciones principales:
+La aplicación tiene dos secciones principales:
 
 - **Inicio**
-- **Mis libros**
+- **Mis favoritos**
 
 Desde la pantalla principal, el usuario podrá seleccionar directamente un libro de la lista para consultar su detalle o tocar la lupa para abrir la vista Buscar.
 
@@ -54,42 +54,42 @@ En Buscar, el usuario podrá escribir el texto de su consulta. La búsqueda se e
 
 En el prototipo actual, la búsqueda utiliza los libros de prueba definidos en `MockBooks.swift`. Todavía no se realizan consultas a Open Library.
 
-Después de ejecutar la búsqueda, la aplicación mostrará un estado de carga mientras obtiene la información de Open Library.
+Actualmente la búsqueda de prueba muestra resultados o el estado sin resultados. La carga de información desde Open Library se incorporará después.
 
 Si se obtienen resultados, el usuario podrá seleccionar un libro para acceder a su detalle.
 
 Si la búsqueda no devuelve coincidencias, se mostrará un estado sin resultados. El usuario podrá volver a abrir Buscar desde la lupa para escribir otra consulta.
 
-Si ocurre un problema durante la consulta a Open Library, se mostrará un estado de error con la opción de volver a intentarlo.
+El estado de error y la opción de intentar nuevamente ya tienen una vista preparada, pero todavía no se utilizan con una consulta real.
 
-Desde la pantalla de detalle, la aplicación comprobará si el libro ya se encuentra guardado.
+Desde el detalle del libro se puede consultar el autor, el año de publicación, el género, la sinopsis y los temas disponibles. También se puede guardar o quitar el libro de favoritos.
 
-- Si el libro no está guardado, se mostrará la opción **Guardar libro**.
-- Si el libro ya está guardado, se mostrará la opción **Eliminar de Mis libros**.
+- Si el libro no está guardado, se mostrará la opción **Agregar a favoritos**.
+- Si el libro ya está guardado, se mostrará la opción **Quitar de favoritos**.
 
-La sección **Mis libros** mostrará los libros almacenados localmente. Desde esta sección el usuario también podrá seleccionar un libro para consultar su detalle.
+La sección **Mis favoritos** mostrará los libros almacenados localmente. Desde esta sección el usuario también podrá seleccionar un libro para consultar su detalle.
 
 Si todavía no existen libros guardados, se mostrará un estado de lista vacía que permitirá al usuario abrir Buscar y realizar una consulta.
 
-Cuando un libro no tenga una portada disponible en Open Library, se mostrará un elemento visual sustituto en lugar de la imagen.
+Cuando un libro de prueba no tiene portada, mostramos «Sin portada». Algunas sugerencias incluyen ilustraciones locales, que todavía no provienen de Open Library.
 
-De esta manera, los diferentes flujos utilizan una misma pantalla de detalle y se conectan mediante el estado del libro y la navegación entre **Inicio** y **Mis libros**.
+De esta manera, utilizamos una sola pantalla de detalle y la misma colección de favoritos para los diferentes recorridos. SwiftData conserva los libros seleccionados al cerrar y reabrir OpenBooks.
 
 ### Flujo general
 
 <img width="1448" height="1086" alt="07-flujo-usuario" src="https://github.com/user-attachments/assets/fa488ace-31df-4de5-bb4a-6094bfa4aee4" />
 
-**Detalle del libro** y **Mis libros** se repiten en el diagrama para mostrar con mayor claridad los distintos recorridos, pero corresponden a las mismas pantallas de la aplicación.
+**Detalle del libro** y **Mis favoritos** se repiten en el diagrama para mostrar con mayor claridad los distintos recorridos, pero corresponden a las mismas pantallas de la aplicación.
 
 El diagrama representa los recorridos principales de navegación. Los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía se muestran por separado en los wireframes.
 
 ## Wireframes
 
-Los siguientes wireframes representan la estructura inicial de las principales pantallas de la aplicación y los estados necesarios para cubrir el MVP.
+Conservamos aquí los wireframes iniciales para mostrar cómo planteamos las pantallas y los estados del proyecto. Son imágenes del diseño original y no representan exactamente la interfaz actual.
 
 ### Pantalla principal
 
-La pantalla principal del wireframe inicial contiene el buscador, una lista inicial de libros y el acceso a la sección **Mis libros**.
+La pantalla principal del wireframe inicial contiene el buscador, una lista inicial de libros y el acceso a la sección **Mis favoritos**.
 
 En la implementación actual, el campo de búsqueda ya no permanece visible en Inicio. La pantalla muestra una lupa que abre una vista Buscar dedicada antes de mostrar Resultados.
 
@@ -97,17 +97,17 @@ En la implementación actual, el campo de búsqueda ya no permanece visible en I
 
 ### Resultados de búsqueda
 
-El wireframe muestra cómo se presentarán los libros encontrados después de realizar una búsqueda en Open Library. Por ahora, la pantalla utiliza libros de prueba.
+El wireframe muestra cómo planteamos la pantalla de resultados. Actualmente se presentan libros de prueba; todavía no se consulta Open Library.
 
 <img width="941" height="1672" alt="02-resultados" src="https://github.com/user-attachments/assets/2832437b-cfa3-40a6-b506-cfcec5a5204c" />
 
 ### Detalle de un libro no guardado
 
-Muestra la información del libro y permite guardarlo en la colección personal.
+En el diseño original se muestra la información del libro y la opción para guardarlo. En la versión actual agregamos una ficha con año de publicación, género, sinopsis y temas principales.
 
 <img width="941" height="1672" alt="03-detalle-no-guardado" src="https://github.com/user-attachments/assets/29a59be6-227a-4ca1-865d-6f1440dba4d5" />
 
-### Mis libros
+### Mis favoritos
 
 Muestra los libros que el usuario ha guardado localmente.
 
@@ -115,53 +115,52 @@ Muestra los libros que el usuario ha guardado localmente.
 
 ### Detalle de un libro guardado
 
-Muestra la información de un libro que ya pertenece a la colección del usuario y permite eliminarlo de **Mis libros**.
+El wireframe muestra la opción de eliminar un libro guardado. Actualmente la acción se llama **Quitar de favoritos**.
 
 <img width="941" height="1672" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/fc9a6265-71e6-4ee3-83da-af05aebe0d3d" />
 
-### Mis libros vacío
+### Mis favoritos vacío
 
-Este estado se mostrará cuando el usuario todavía no tenga libros guardados.
+Este estado aparece cuando el usuario todavía no tiene libros guardados.
 
 <img width="941" height="1672" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/39c7128d-7280-4e08-bd93-36ec7da5010c" />
 
 ### Estados adicionales del MVP
 
-Además de las pantallas principales, la aplicación contempla diferentes estados necesarios para manejar correctamente las respuestas de Open Library.
+Además de las pantallas principales, consideramos diferentes estados para las búsquedas. Por ahora, los datos son locales; la conexión a Open Library sigue pendiente.
 
 #### Búsqueda sin resultados
 
-Se mostrará cuando Open Library no devuelva libros que coincidan con la búsqueda realizada. El usuario podrá modificar su búsqueda para intentarlo nuevamente.
+Se muestra cuando la consulta no coincide con los libros de prueba. El usuario puede realizar otra búsqueda.
 
 #### Carga de resultados
 
-Se mostrará mientras la aplicación obtiene los resultados de una búsqueda desde Open Library.
+Esta vista está preparada, pero no se activa durante las búsquedas locales. La utilizaremos cuando se consulten datos externos.
 
 #### Error en la búsqueda
 
-Se mostrará cuando ocurra un problema al obtener los resultados desde Open Library. El usuario tendrá la opción de intentar nuevamente la consulta.
+Esta vista está preparada para mostrar problemas de consulta y permitir intentarlo de nuevo. Todavía no se activa con los datos locales.
 
 #### Libro sin portada
 
-Cuando Open Library no tenga una portada disponible para un libro, se mostrará un elemento visual sustituto en lugar de dejar el espacio de la imagen vacío.
+Si un libro no tiene portada en los datos de prueba, la interfaz muestra un elemento sustituto en lugar de dejar el espacio vacío.
 
 <img width="1536" height="1024" alt="08-estados-adicionales" src="https://github.com/user-attachments/assets/d4c5124b-5d78-457f-b252-ebaca66c3d95" />
 
-## Tecnologías previstas
+## Tecnologías utilizadas y pendientes
 
-- Swift
-- SwiftUI
-- Open Library API
-- Navegación con SwiftUI
-- Programación asíncrona con async/await
-- Persistencia local
-- Git y GitHub
+- **Swift y SwiftUI:** utilizados para las pantallas, los componentes y la navegación.
+- **Observation (`@Observable`):** utilizado para compartir los cambios de búsqueda y favoritos.
+- **SwiftData:** utilizado para guardar y recuperar favoritos localmente.
+- **XCTest:** utilizado para comprobar la búsqueda y las operaciones de favoritos.
+- **Git y GitHub:** utilizados para mantener las versiones del proyecto.
+- **Open Library y async/await:** considerados para la conexión con libros externos, pero todavía no implementados.
 
 ## Accesibilidad con VoiceOver
 
 La accesibilidad se consideró desde el diseño de los wireframes y del flujo de usuario de OpenBooks.
 
-En el prototipo actual se añadieron etiquetas descriptivas a las lupas de Inicio y Resultados, así como al campo de la vista Buscar. Las demás consideraciones de esta sección forman parte de la planificación y todavía no se han comprobado por completo con VoiceOver.
+En la aplicación se incluyen etiquetas descriptivas para la búsqueda, los botones y distintos elementos de las pantallas. Sin embargo, todavía falta revisar todo el recorrido usando VoiceOver en un dispositivo o simulador.
 
 El criterio principal es que VoiceOver comunique la información necesaria para comprender y utilizar la aplicación, evitando anunciar de forma independiente elementos decorativos o información que ya esté representada mediante texto.
 
@@ -171,12 +170,12 @@ Las etiquetas de accesibilidad serán breves, claras y describirán directamente
 
 | Pantalla o estado | Información relevante para VoiceOver |
 | --- | --- |
-| Pantalla principal | OpenBooks, acción Buscar libros, Libros, título y autor de cada libro, Inicio y Mis libros. |
+| Pantalla principal | OpenBooks, acción Buscar libros, Libros, título y autor de cada libro, Inicio y Mis favoritos. |
 | Buscar | Acción para regresar, campo Buscar libros y texto actual de la consulta. |
 | Resultados | Resultados, acción para regresar, acción Buscar libros y título y autor de cada resultado. |
-| Detalle del libro | Acción para regresar, Detalle del libro, título, autor, año cuando esté disponible y Guardar libro o Eliminar de Mis libros, según corresponda. |
-| Mis libros | Mis libros, título y autor de cada libro guardado, Inicio y Mis libros. |
-| Mis libros vacío | Mis libros, Todavía no tienes libros guardados, Busca un libro y guárdalo para verlo aquí y Buscar libros. |
+| Detalle del libro | Acción para regresar, Detalle del libro, título, autor, año cuando esté disponible y Agregar a favoritos o Quitar de favoritos, según corresponda. |
+| Mis favoritos | Mis favoritos, título y autor de cada libro guardado, Inicio y Mis favoritos. |
+| Mis favoritos vacío | Mis favoritos, Todavía no tienes libros guardados, Busca un libro y guárdalo para verlo aquí y Buscar libros. |
 | Carga | Buscando libros y Esto puede tardar unos segundos. |
 | Sin resultados | No se encontraron libros e Intenta realizar otra búsqueda. |
 | Error | No se pudieron cargar los libros, el mensaje correspondiente e Intentar nuevamente. |
@@ -196,7 +195,7 @@ Esto incluye:
 
 - La lupa que aparece dentro del campo de texto de la vista Buscar, porque es únicamente visual.
 - Las flechas utilizadas como indicadores visuales.
-- El icono utilizado en el estado Mis libros vacío.
+- El icono utilizado en el estado Mis favoritos vacío.
 - Las portadas cuando el libro ya pueda identificarse mediante su título y autor.
 
 Por ejemplo, si una fila contiene una portada, el título 1984 y el autor George Orwell, la información relevante para VoiceOver será:
@@ -216,13 +215,13 @@ Las etiquetas creadas específicamente para accesibilidad serán concisas y desc
 Algunos ejemplos son:
 
 - Buscar libros
-- Guardar libro
-- Eliminar de Mis libros
+- Agregar a favoritos
+- Quitar de favoritos
 - Intentar nuevamente
 
 No se utilizarán descripciones extensas cuando una acción pueda expresarse de forma directa.
 
-Si posteriormente se agrega contenido textual visible, como una sinopsis, este también deberá ser accesible mediante VoiceOver. Actualmente la sinopsis no forma parte del MVP.
+El detalle ya incluye sinopsis y temas principales cuando están disponibles. Como el contenido es texto de SwiftUI, también debemos comprobar su lectura y orden con VoiceOver.
 
 ## Documentación del proyecto
 
@@ -261,15 +260,19 @@ Este documento incluye:
 - La distinción entre estado local y estado compartido.
 - Las mejoras que podrán realizarse después, sin adelantar funcionalidades del MVP.
 
+### Pruebas y almacenamiento
+
+Las comprobaciones de búsqueda y la forma en que se guardan los favoritos se explican en [`Docs/pruebas-y-persistencia.md`](Docs/pruebas-y-persistencia.md). Este documento describe las comprobaciones realizadas con XCTest y el almacenamiento local mediante SwiftData.
+
 ## Pantallas actuales
 
-Las siguientes capturas se conservaron como registro visual de una versión anterior del prototipo. No todas representan el flujo de búsqueda actual.
+Conservamos las capturas originales en las mismas secciones del README. Son imágenes de una versión anterior y sirven para ver cómo comenzó el diseño. **No son capturas de la interfaz editorial actual**, que ahora incluye colores adaptados al modo claro y oscuro, sugerencias y una ficha de libro más completa.
 
-Después del ajuste de navegación, Inicio y Resultados muestran una lupa para abrir Buscar, y el campo editable se encuentra únicamente en esa vista. Las capturas de Inicio y Resultados están pendientes de actualizarse y todavía falta incorporar una captura de Buscar en este README.
+En la aplicación actual, Inicio y Resultados muestran una lupa que abre Buscar. El campo de texto editable se encuentra únicamente en esa vista. Las capturas antiguas no deben confundirse con una verificación del diseño actual.
 
 ### Pantalla principal
 
-Muestra el acceso a Buscar mediante una lupa, la lista inicial de libros y la navegación entre **Inicio** y **Mis libros**.
+Muestra el acceso a Buscar mediante una lupa, la lista inicial de libros y la navegación entre **Inicio** y **Mis favoritos**.
 
 <table align="center">
   <tr>
@@ -283,7 +286,7 @@ Muestra el acceso a Buscar mediante una lupa, la lista inicial de libros y la na
 
 Es la vista dedicada para escribir una consulta. El usuario accede a ella desde la lupa, escribe el texto de búsqueda y presiona Enter para mostrar Resultados.
 
-Actualmente no se incluye una captura nueva de esta vista en el README. Se agregará cuando se actualice el registro visual del proyecto.
+La captura de Buscar está pendiente de actualizarse. No hemos sustituido ni movido las imágenes originales de este documento.
 
 ### Resultados de búsqueda
 
@@ -300,7 +303,7 @@ Muestra los resultados de una búsqueda, permite seleccionar un libro para consu
 
 ### Detalle de un libro no guardado
 
-Muestra la información del libro seleccionado y la opción **Guardar libro**.
+Esta captura corresponde al diseño anterior. Actualmente Detalle muestra autor, año de publicación, género, sinopsis y temas, además del botón fijo **Agregar a favoritos**.
 
 <table align="center">
   <tr>
@@ -312,7 +315,7 @@ Muestra la información del libro seleccionado y la opción **Guardar libro**.
 
 ### Detalle de un libro guardado
 
-Muestra la información de un libro guardado y la opción **Eliminar de Mis libros**.
+Esta captura corresponde al diseño anterior. En la versión actual el botón se llama **Quitar de favoritos**.
 
 <table align="center">
   <tr>
@@ -322,7 +325,7 @@ Muestra la información de un libro guardado y la opción **Eliminar de Mis libr
   </tr>
 </table>
 
-### Mis libros
+### Mis favoritos
 
 Muestra los libros que se encuentran guardados en la colección.
 
@@ -334,7 +337,7 @@ Muestra los libros que se encuentran guardados en la colección.
   </tr>
 </table>
 
-### Mis libros vacío
+### Mis favoritos vacío
 
 Muestra el estado de la sección cuando todavía no existen libros guardados.
 
@@ -350,7 +353,7 @@ Muestra el estado de la sección cuando todavía no existen libros guardados.
 
 ### Carga
 
-Muestra la vista de carga que ya está preparada en el código. Todavía no se activa durante las búsquedas con datos de prueba; se utilizará cuando se integre la consulta a Open Library.
+Esta es una captura del estado de carga previsto. La vista está preparada, pero no se activa con las búsquedas locales.
 
 <table align="center">
   <tr>
@@ -374,7 +377,7 @@ Muestra el estado utilizado cuando no se encuentran libros que coincidan con la 
 
 ### Error en la búsqueda
 
-Muestra la vista de error que ya está preparada en el código. Todavía no se activa durante las búsquedas con datos de prueba; se utilizará cuando la aplicación pueda presentar errores de consulta.
+Esta es una captura del estado de error previsto. La vista está preparada, pero todavía no se activa con las búsquedas locales.
 
 <table align="center">
   <tr>
@@ -386,7 +389,7 @@ Muestra la vista de error que ya está preparada en el código. Todavía no se a
 
 ### Libro sin portada
 
-Muestra el elemento visual sustituto cuando un libro no tiene portada. Por ahora no se descargan imágenes reales: en los libros de prueba con `hasCover` igual a `true` aparece una X como marcador provisional y, cuando es `false`, aparece el texto «Sin portada».
+Esta captura corresponde a un estado de portada ausente. Actualmente se utilizan ilustraciones locales en algunas sugerencias y el texto «Sin portada» cuando el libro no tiene imagen disponible en los datos de prueba. No se descargan portadas de Open Library.
 
 <table align="center">
   <tr>
@@ -398,38 +401,32 @@ Muestra el elemento visual sustituto cuando un libro no tiene portada. Por ahora
 
 ## Estado actual del proyecto
 
-Actualmente se encuentran desarrollados:
+Actualmente tenemos implementado lo siguiente:
 
-- El objetivo y alcance del proyecto.
-- La definición del MVP.
-- El flujo principal de usuario.
-- Los wireframes iniciales de las principales pantallas.
-- Las vistas principales de la aplicación en SwiftUI.
-- La navegación principal entre **Inicio**, **Buscar**, **Resultados**, **Detalle del libro** y **Mis libros** mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
-- Una vista Buscar dedicada que se abre desde la lupa de Inicio, Resultados o la acción Buscar libros de Mis libros.
-- La ejecución de la búsqueda al presionar Enter en el teclado desde la vista Buscar.
-- El regreso entre pantallas mediante la navegación de SwiftUI.
-- Un caso real de estado compartido para la colección de libros.
-- Una sola fuente de verdad para el estado de guardado de los libros mediante `BooksState`.
-- La actualización de **Mis libros** al guardar o eliminar un libro desde su detalle.
-- Las vistas de carga y error preparadas, aunque todavía no se activan durante las búsquedas del prototipo.
-- Los estados de búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
-- La planificación de accesibilidad mediante VoiceOver.
-- La documentación del diseño de navegación y organización del estado.
-- La separación de la lógica de búsqueda en `SearchViewModel` y la operación de guardar o eliminar libros en `BooksState`.
-- Las capturas de las pantallas implementadas y los estados previstos, con algunas imágenes pendientes de actualizar al flujo actual.
+- Las pantallas **Inicio**, **Buscar**, **Resultados**, **Detalle** y **Mis favoritos** con SwiftUI.
+- La navegación entre pantallas mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
+- Un diseño editorial con colores que cambian según el modo claro u oscuro del sistema. En Inicio también cambia la ilustración del gato, los libros y la lámpara.
+- Un conjunto de sugerencias y la opción **Ver todo** para mostrar más libros de prueba.
+- Una vista Buscar que ejecuta la consulta al presionar Enter o Buscar en el teclado.
+- Resultados de prueba para «Harry Potter» y «Orgullo y prejuicio», además de un estado sin resultados.
+- Las vistas de carga y error preparadas para una consulta externa futura.
+- El detalle del libro con autor, año de publicación, género, sinopsis y temas disponibles. El contenido puede desplazarse y el botón de favoritos permanece en la parte inferior.
+- La sección Mis favoritos y su estado vacío, con acceso a Buscar.
+- El guardado local de favoritos con SwiftData, incluida su recuperación al cerrar y reabrir OpenBooks.
+- La prevención de libros duplicados al guardar el mismo favorito.
+- La separación de modelos, vistas, estado de búsqueda y operaciones de favoritos en diferentes archivos.
+- Etiquetas y encabezados de accesibilidad en varias pantallas. Falta comprobar el recorrido completo con VoiceOver.
+- Ocho pruebas unitarias XCTest que cubren búsquedas y operaciones de favoritos.
+- Los wireframes y las capturas originales de este README, conservados como registro del diseño inicial.
 
-La navegación y el estado compartido definidos durante el diseño ya se encuentran implementados en el prototipo actual.
+La búsqueda utiliza los libros definidos en `MockBooks.swift`. `SearchViewModel` mantiene el texto, el estado y los resultados; `BooksState` actualiza la colección que utilizan las pantallas y recupera los favoritos guardados mediante `SavedBooksRepository` y `SavedBook`.
 
-La organización basada en MVVM se está incorporando de forma gradual. `SearchViewModel`, definido con `@Observable`, mantiene el texto, el estado y los índices de los resultados de búsqueda. `ContentView` conserva la navegación y utiliza `@Bindable` para conectar el campo de Buscar con el texto del ViewModel.
-
-Por su parte, `BooksState` continúa manteniendo la colección compartida y ahora incluye `toggleSaved(at:)`, que cambia el estado de guardado del libro seleccionado. `ContentView` solicita esa operación, sin modificar directamente `isSaved`. Esta reorganización es incremental: todavía no se ha implementado una arquitectura MVVM completa ni se ha creado un `BooksViewModel` independiente.
-
-La integración con Open Library, la persistencia local y las demás funcionalidades pendientes del MVP se desarrollarán progresivamente durante el proyecto.
+**Pendiente:** conectar Open Library, obtener portadas y datos reales, verificar el recorrido completo de accesibilidad y revisar visualmente todas las pantallas tanto en modo claro como en modo oscuro. Las imágenes originales de este README no sustituyen esa comprobación visual.
 
 ## Ejecución del proyecto
 
-1. Clonar o descargar el repositorio.
-2. Abrir `OpenBooks.xcodeproj` en Xcode.
-3. Seleccionar un simulador de iOS.
-4. Ejecutar el proyecto desde Xcode.
+1. Clonar o descargar el proyecto con sus archivos Swift y recursos gráficos.
+2. Abrir el proyecto iOS actualizado en Xcode.
+3. Seleccionar un simulador de iOS compatible con iOS 17 o posterior.
+4. Ejecutar OpenBooks y revisar Inicio, Buscar, Detalle y Mis favoritos.
+5. Para revisar los dos aspectos, cambiar el modo claro u oscuro desde **Configuración → Pantalla y brillo** del simulador y volver a OpenBooks. También se puede hacer desde Xcode en **Environment Overrides**, cuando esté disponible.

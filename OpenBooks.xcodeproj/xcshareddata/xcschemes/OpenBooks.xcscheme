@@ -21,6 +21,20 @@
                ReferencedContainer = "container:OpenBooks.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D781FF60420F4B4C8B5EF20C"
+               BuildableName = "OpenBooksTests.xctest"
+               BlueprintName = "OpenBooksTests"
+               ReferencedContainer = "container:OpenBooks.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -39,6 +53,16 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D781FF60420F4B4C8B5EF20C"
+               BuildableName = "OpenBooksTests.xctest"
+               BlueprintName = "OpenBooksTests"
+               ReferencedContainer = "container:OpenBooks.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>
