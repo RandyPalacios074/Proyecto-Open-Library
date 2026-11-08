@@ -10,7 +10,7 @@ struct MyBooksView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Mis favoritos")
-                    .foregroundStyle(Color("Ink"))
+                    .foregroundStyle(Color.appInk)
                     .font(.largeTitle)
                     .bold()
 
@@ -33,7 +33,7 @@ struct MyBooksView: View {
                                 if hasSavedBookAfter(index: index) {
                                     RoundedRectangle(cornerRadius: 0)
                                         .frame(height: 1)
-                                        .foregroundStyle(Color("Muted"))
+                                        .foregroundStyle(Color.appMuted)
                                 }
                             }
                         }
@@ -59,7 +59,7 @@ struct MyBooksView: View {
                 onMyBooks: {}
             )
         }
-        .background(Color("Canvas").ignoresSafeArea())
+        .background(Color.appCanvas.ignoresSafeArea())
     }
 
     func hasSavedBooks() -> Bool {

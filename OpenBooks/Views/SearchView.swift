@@ -11,7 +11,7 @@ struct SearchView: View {
                 .padding(.top, 24)
             Spacer()
         }
-        .background(Color("Canvas").ignoresSafeArea())
+        .background(Color.appCanvas.ignoresSafeArea())
     }
 }
 
@@ -22,12 +22,12 @@ struct SearchFieldView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(Color("Muted"))
+                .foregroundStyle(Color.appMuted)
                 .accessibilityHidden(true)
 
             TextField("Buscar libros", text: $text)
-                .foregroundStyle(Color("Ink"))
-                .tint(Color("Accent"))
+                .foregroundStyle(Color.appInk)
+                .tint(Color.appAccent)
                 .submitLabel(.search)
                 .accessibilityLabel("Buscar libros")
                 .onSubmit {
@@ -36,7 +36,7 @@ struct SearchFieldView: View {
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
-        .background(Color("SearchSurface"), in: RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color("Border"), lineWidth: 1))
+        .background(Color.appSearchSurface, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.appBorder, lineWidth: 1))
     }
 }

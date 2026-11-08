@@ -12,8 +12,8 @@ struct BottomNavigationView: View {
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 8)
-        .background(Color("NavSurface"), in: RoundedRectangle(cornerRadius: 22))
-        .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color("Border"), lineWidth: 0.7))
+        .background(Color.appNavSurface, in: RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.appBorder, lineWidth: 0.7))
         .padding(.horizontal, 16)
         .padding(.bottom, 6)
     }
@@ -23,10 +23,10 @@ struct BottomNavigationView: View {
             VStack(spacing: 4) {
                 if title == "Mis favoritos" {
                     WideBookmarkShape()
-                        .fill(selected ? Color("Accent") : Color.clear)
+                        .fill(selected ? Color.appAccent : Color.clear)
                         .overlay {
                             WideBookmarkShape()
-                                .stroke(selected ? Color("Accent") : Color("Muted"),
+                                .stroke(selected ? Color.appAccent : Color.appMuted,
                                         style: StrokeStyle(lineWidth: 1.9, lineJoin: .round))
                         }
                         .frame(width: 25, height: 27)
@@ -43,7 +43,7 @@ struct BottomNavigationView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.85)
             }
-            .foregroundStyle(selected ? Color("Accent") : Color("Muted"))
+            .foregroundStyle(selected ? Color.appAccent : Color.appMuted)
             .frame(maxWidth: .infinity)
             .frame(minHeight: 52)
             .contentShape(Rectangle())

@@ -16,7 +16,7 @@ struct SearchResultsView: View {
 
                 HStack {
                     Text("Resultados")
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .font(.largeTitle)
                         .bold()
 
@@ -27,7 +27,7 @@ struct SearchResultsView: View {
                     } label: {
                         Image(systemName: "magnifyingglass")
                             .font(.system(size: 24))
-                            .foregroundStyle(Color("Ink"))
+                            .foregroundStyle(Color.appInk)
                     }
                     .accessibilityLabel("Buscar libros")
                 }
@@ -59,7 +59,7 @@ struct SearchResultsView: View {
                             if index != resultIndices.last {
                                 RoundedRectangle(cornerRadius: 0)
                                     .frame(height: 1)
-                                    .foregroundStyle(Color("Muted"))
+                                    .foregroundStyle(Color.appMuted)
                             }
                         }
                     }
@@ -95,7 +95,7 @@ struct SearchResultsView: View {
                 onMyBooks: onMyBooks
             )
         }
-        .background(Color("Canvas").ignoresSafeArea())
+        .background(Color.appCanvas.ignoresSafeArea())
     }
 }
 
@@ -107,7 +107,7 @@ struct LoadingResultsView: View {
 
                 Image(systemName: "hourglass")
                     .font(.system(size: 50))
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -125,7 +125,7 @@ struct LoadingResultsView: View {
                 Spacer()
 
                 Text("Esto puede tardar unos segundos.")
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -141,7 +141,7 @@ struct NoResultsView: View {
 
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 50))
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -160,7 +160,7 @@ struct NoResultsView: View {
                 Spacer()
 
                 Text("Intenta realizar otra búsqueda.")
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -178,7 +178,7 @@ struct SearchErrorView: View {
 
                 Image(systemName: "exclamationmark.circle")
                     .font(.system(size: 50))
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -197,7 +197,7 @@ struct SearchErrorView: View {
                 Spacer()
 
                 Text("Ocurrió un error al obtener los resultados.")
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -206,7 +206,7 @@ struct SearchErrorView: View {
                 Spacer()
 
                 Text("Intenta nuevamente.")
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
 
                 Spacer()
             }
@@ -218,12 +218,12 @@ struct SearchErrorView: View {
                     Spacer()
 
                     Text("Intentar nuevamente")
-                        .foregroundStyle(Color("Canvas"))
+                        .foregroundStyle(Color.appCanvas)
 
                     Spacer()
                 }
                 .padding(.vertical, 14)
-                .background(Color("Accent"))
+                .background(Color.appAccent)
                 .clipShape(
                     RoundedRectangle(cornerRadius: 14)
                 )

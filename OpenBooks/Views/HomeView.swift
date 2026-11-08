@@ -30,7 +30,7 @@ struct HomeView: View {
                             Text("Encuentra tu próximo libro")
                                 .font(.system(.title, design: .serif, weight: .semibold))
                         }
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .padding(.top, 12)
                     } else {
                         Image(colorScheme == .dark ? "HeroReferenceNight" : "HeroReferenceDay")
@@ -50,11 +50,11 @@ struct HomeView: View {
                                 .font(.body)
                             Spacer()
                         }
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .padding(.horizontal, 20)
                         .frame(minHeight: 54)
-                        .background(Color("SearchSurface"), in: Capsule())
-                        .overlay(Capsule().stroke(Color("Border"), lineWidth: 0.8))
+                        .background(Color.appSearchSurface, in: Capsule())
+                        .overlay(Capsule().stroke(Color.appBorder, lineWidth: 0.8))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Buscar libros")
@@ -64,7 +64,7 @@ struct HomeView: View {
                         HStack(alignment: .firstTextBaseline) {
                             Text("Sugerencias")
                                 .font(.system(.title2, design: .serif, weight: .semibold))
-                                .foregroundStyle(Color("Ink"))
+                                .foregroundStyle(Color.appInk)
                                 .accessibilityAddTraits(.isHeader)
                             Spacer()
                             Button {
@@ -76,7 +76,7 @@ struct HomeView: View {
                                         .font(.caption.weight(.semibold))
                                 }
                                 .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Color("Accent"))
+                                .foregroundStyle(Color.appAccent)
                             }
                             .buttonStyle(.plain)
                             .accessibilityHint("Muestra u oculta los demás libros de prueba")
@@ -92,7 +92,7 @@ struct HomeView: View {
 
                                         Text(shortTitle(for: index))
                                             .font(.subheadline.weight(.medium))
-                                            .foregroundStyle(Color("Ink"))
+                                            .foregroundStyle(Color.appInk)
                                             .lineLimit(3)
                                             .multilineTextAlignment(.center)
                                             .frame(maxWidth: .infinity, alignment: .top)
@@ -115,7 +115,7 @@ struct HomeView: View {
 
             BottomNavigationView(homeActive: true, onHome: {}, onMyBooks: onMyBooks)
         }
-        .background(Color("Canvas").ignoresSafeArea())
+        .background(Color.appCanvas.ignoresSafeArea())
     }
 
     private func shortTitle(for index: Int) -> String {

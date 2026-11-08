@@ -13,7 +13,7 @@ struct BookDetailView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Detalle del libro")
                         .font(.largeTitle.bold())
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .accessibilityAddTraits(.isHeader)
                         .padding(.bottom, 20)
 
@@ -23,7 +23,7 @@ struct BookDetailView: View {
 
                     Text(book.title)
                         .font(.system(.title2, design: .serif, weight: .bold))
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .padding(.bottom, 22)
@@ -31,7 +31,7 @@ struct BookDetailView: View {
                     VStack(alignment: .leading, spacing: 15) {
                         Text("Información")
                             .font(.headline)
-                            .foregroundStyle(Color("Ink"))
+                            .foregroundStyle(Color.appInk)
                             .accessibilityAddTraits(.isHeader)
                             .padding(.bottom, 2)
 
@@ -48,18 +48,18 @@ struct BookDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(20)
-                    .background(Color("Card"), in: RoundedRectangle(cornerRadius: 16))
+                    .background(Color.appCard, in: RoundedRectangle(cornerRadius: 16))
                     .padding(.bottom, 28)
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Sobre este libro")
                             .font(.headline)
-                            .foregroundStyle(Color("Ink"))
+                            .foregroundStyle(Color.appInk)
                             .accessibilityAddTraits(.isHeader)
 
                         Text(book.synopsis ?? "Todavía no hay una descripción disponible para este libro.")
                             .font(.body)
-                            .foregroundStyle(Color("Muted"))
+                            .foregroundStyle(Color.appMuted)
                             .lineSpacing(3)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -70,12 +70,12 @@ struct BookDetailView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Temas principales")
                                 .font(.headline)
-                                .foregroundStyle(Color("Ink"))
+                                .foregroundStyle(Color.appInk)
                                 .accessibilityAddTraits(.isHeader)
 
                             Text(book.themes.joined(separator: " · "))
                                 .font(.subheadline)
-                                .foregroundStyle(Color("Muted"))
+                                .foregroundStyle(Color.appMuted)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -90,10 +90,10 @@ struct BookDetailView: View {
             Button(action: onSaveOrDelete) {
                 Text(book.isSaved ? "Quitar de favoritos" : "Agregar a favoritos")
                     .font(.headline)
-                    .foregroundStyle(Color("Canvas"))
+                    .foregroundStyle(Color.appCanvas)
                     .frame(maxWidth: .infinity)
                     .frame(minHeight: 52)
-                    .background(Color("Accent"), in: RoundedRectangle(cornerRadius: 14))
+                    .background(Color.appAccent, in: RoundedRectangle(cornerRadius: 14))
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 20)
@@ -105,7 +105,7 @@ struct BookDetailView: View {
                 onMyBooks: onMyBooks
             )
         }
-        .background(Color("Canvas").ignoresSafeArea())
+        .background(Color.appCanvas.ignoresSafeArea())
     }
 }
 
@@ -116,11 +116,11 @@ private struct DetailInformationRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text(label)
-                .foregroundStyle(Color("Muted"))
+                .foregroundStyle(Color.appMuted)
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 8)
             Text(value)
-                .foregroundStyle(Color("Ink"))
+                .foregroundStyle(Color.appInk)
                 .multilineTextAlignment(.trailing)
                 .fixedSize(horizontal: false, vertical: true)
         }
