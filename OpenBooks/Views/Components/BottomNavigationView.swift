@@ -7,8 +7,18 @@ struct BottomNavigationView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            tabButton(title: "Inicio", symbol: homeActive ? "house.fill" : "house", selected: homeActive, action: onHome)
-            tabButton(title: "Mis favoritos", symbol: homeActive ? "bookmark" : "bookmark.fill", selected: !homeActive, action: onMyBooks)
+            BottomTabButton(
+                title: "Inicio",
+                symbol: homeActive ? "house.fill" : "house",
+                selected: homeActive,
+                action: onHome
+            )
+            BottomTabButton(
+                title: "Mis favoritos",
+                symbol: homeActive ? "bookmark" : "bookmark.fill",
+                selected: !homeActive,
+                action: onMyBooks
+            )
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 8)
@@ -17,8 +27,15 @@ struct BottomNavigationView: View {
         .padding(.horizontal, 16)
         .padding(.bottom, 6)
     }
+}
 
-    private func tabButton(title: String, symbol: String, selected: Bool, action: @escaping () -> Void) -> some View {
+private struct BottomTabButton: View {
+    let title: String
+    let symbol: String
+    let selected: Bool
+    let action: () -> Void
+
+    var body: some View {
         Button(action: action) {
             VStack(spacing: 4) {
                 if title == "Mis favoritos" {
