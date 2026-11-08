@@ -7,9 +7,9 @@ Este documento explica cómo guardamos los libros favoritos y cómo comprobamos 
 Utilizamos SwiftData para conservar los libros seleccionados, incluso después de cerrar la aplicación.
 
 - `SavedBook` es el modelo que representa un favorito guardado. Conserva un identificador, título, autor, año y disponibilidad de portada.
-- `SavedBooksRepository` permite consultar, guardar y eliminar los registros utilizando el contexto de SwiftData.
-- `BooksState` mantiene los libros que mostramos en las pantallas. Cuando cambia un favorito, vuelve a consultar los registros guardados para actualizar `isSaved`.
-- `OpenBooksApp` configura el contenedor de SwiftData para que las pantallas tengan acceso a la información guardada.
+- `SavedBooksRepository` permite consultar, guardar y eliminar los registros utilizando el contexto de SwiftData. Cumple el protocolo `FavoriteBooksStore`, que utiliza `BooksState`.
+- `BooksState` mantiene los libros que mostramos en las pantallas, actualiza `isSaved` cuando cambia un favorito y prepara los errores de guardado para que la interfaz los muestre.
+- `OpenBooksApp` configura el contenedor de SwiftData, crea el servicio de favoritos y se lo proporciona a `BooksState` antes de presentar las pantallas.
 
 Al guardar un libro, comprobamos si su identificador ya existe. Si ya está registrado, no se agrega otra copia. Si ocurre un problema al guardar o eliminar, mostramos un mensaje en lugar de cambiar la interfaz como si la operación hubiera terminado correctamente.
 
@@ -32,8 +32,11 @@ Utilizamos XCTest para revisar la búsqueda y el guardado sin depender de una co
 6. Intentar guardar el mismo libro dos veces no genera registros duplicados.
 7. Eliminar un favorito hace que ya no aparezca entre los registros guardados.
 8. Utilizar un índice de libro inválido no modifica los favoritos.
+9. Agregar y quitar un favorito desde `BooksState` mantiene la colección y los registros sincronizados.
+10. Si falla la consulta del servicio de favoritos, `BooksState` prepara un mensaje de error para la interfaz.
+11. Si falla el guardado de un favorito, el estado del libro no se marca como guardado y se informa el error.
 
-Las pruebas de almacenamiento utilizan una configuración temporal en memoria. Así podemos comprobar sus operaciones sin modificar la colección de una persona que utilice la aplicación.
+Las pruebas de SwiftData utilizan una configuración temporal en memoria y los errores del servicio se comprueban con un servicio simulado. Así podemos comprobar sus operaciones sin modificar la colección de una persona que utilice la aplicación.
 
 ## Comprobación al cerrar y reabrir
 

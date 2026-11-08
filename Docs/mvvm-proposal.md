@@ -10,7 +10,7 @@ Actualmente los archivos Swift están repartidos en carpetas según su función.
 
 ### `Models/Book.swift`
 
-Define la información de un libro: identificador, título, autor, año, disponibilidad de portada, estado de favorito, sinopsis, género y temas. También conserva algunos campos opcionales de información original, aunque esos campos no se muestran en la ficha actual.
+Define la información de un libro: identificador, título, autor, año, disponibilidad de portada, estado de favorito, sinopsis, género y temas. La ficha utiliza únicamente los datos que se muestran en la aplicación.
 
 ### `Models/SavedBook.swift`
 
@@ -22,7 +22,7 @@ Contiene los libros utilizados por ahora para mostrar la interfaz, las sugerenci
 
 ### `Views/ContentView.swift`
 
-Es la vista principal. Controla la navegación entre Inicio, Buscar, Resultados, Detalle y Mis favoritos. Mantiene `SearchViewModel` y `BooksState`, y solicita las operaciones de guardado cuando el usuario toca el botón de favoritos. No decide qué libros coinciden con la búsqueda ni realiza directamente las operaciones de SwiftData.
+Es la vista principal. Controla la navegación entre Inicio, Buscar, Resultados, Detalle y Mis favoritos. Mantiene el estado de navegación y `SearchViewModel`. Recibe `BooksState` desde el punto de entrada de la aplicación y le comunica las acciones de favoritos. No obtiene el contexto de SwiftData ni realiza operaciones de almacenamiento directamente.
 
 ### `Views/HomeView.swift`
 
@@ -46,7 +46,7 @@ Representa Mis favoritos. Utiliza la colección compartida para mostrar los libr
 
 ### `Views/Components/`
 
-Contiene partes reutilizables de las pantallas, como las filas, las portadas, la barra inferior y el estado vacío. Así evitamos repetirlas en varias vistas.
+Contiene partes reutilizables de las pantallas, como las filas, las portadas, los botones de la barra inferior y el estado vacío. También contiene `BookColors.swift`, una extensión de `Color` que centraliza los nombres de los recursos de color. Así evitamos repetirlas en varias vistas.
 
 ### `ViewModels/SearchViewModel.swift`
 
@@ -54,15 +54,15 @@ Guarda el texto, los índices de resultados y el estado de la búsqueda. Actualm
 
 ### `ViewModels/BooksState.swift`
 
-Mantiene la colección de libros que comparten las pantallas. Recupera los favoritos guardados y actualiza `isSaved` cuando cambia la colección persistente.
+Mantiene la colección de libros que comparten las pantallas. Recibe el servicio de favoritos mediante un protocolo, recupera los registros guardados, actualiza `isSaved` y administra el mensaje de error del almacenamiento.
 
 ### `Services/SavedBooksRepository.swift`
 
-Contiene las operaciones de SwiftData para consultar, guardar y eliminar favoritos. `BooksState` las utiliza sin colocar ese código dentro de las vistas.
+Define el protocolo `FavoriteBooksStore` y su implementación `SavedBooksRepository`. El repositorio consulta, guarda y elimina favoritos con SwiftData. `BooksState` utiliza el protocolo, por lo que no depende de una implementación de almacenamiento concreta.
 
 ### `OpenBooksApp.swift`
 
-Es el punto de entrada. Crea `ContentView` y configura el contenedor de SwiftData para `SavedBook`.
+Es el punto de entrada. Configura el contenedor de SwiftData para `SavedBook`, crea el servicio de favoritos y se lo proporciona a `BooksState` antes de crear `ContentView`.
 
 ---
 
@@ -81,9 +81,9 @@ Las vistas muestran información y reciben las acciones del usuario. Inicio mues
 ### Estado y lógica
 
 - `SearchViewModel` mantiene la búsqueda y determina los resultados.
-- `BooksState` mantiene la colección de libros y la actualiza cuando cambian los favoritos guardados.
-- `SavedBooksRepository` realiza las operaciones de guardar, consultar y eliminar mediante SwiftData.
-- `ContentView` se encarga de la navegación y coordina las acciones entre las pantallas.
+- `BooksState` mantiene la colección de libros, la actualiza cuando cambian los favoritos guardados y administra los errores de almacenamiento.
+- `SavedBooksRepository` realiza las operaciones de guardar, consultar y eliminar mediante SwiftData y cumple el protocolo `FavoriteBooksStore`.
+- `ContentView` se encarga de la navegación y comunica las acciones de favoritos al modelo de estado, sin manejar directamente el contexto ni los errores de SwiftData.
 
 Esta separación evita repetir condiciones de búsqueda u operaciones de almacenamiento dentro de varias vistas.
 
@@ -126,7 +126,9 @@ BookDetailView comunica la acción
           ↓
 ContentView llama a BooksState
           ↓
-SavedBooksRepository guarda o elimina con SwiftData
+BooksState utiliza FavoriteBooksStore para guardar o eliminar
+          ↓
+SavedBooksRepository ejecuta la operación con SwiftData
           ↓
 BooksState vuelve a consultar los favoritos
           ↓
@@ -151,7 +153,7 @@ OpenBooks/
 │   ├── SearchViewModel.swift
 │   └── SearchViewState.swift
 ├── Views/
-│   ├── Components/
+│   ├── Components/ (incluye BookColors.swift)
 │   ├── ContentView.swift
 │   ├── HomeView.swift
 │   ├── SearchView.swift
@@ -163,7 +165,7 @@ OpenBooks/
 └── OpenBooksApp.swift
 ```
 
-También contamos con recursos de imágenes y colores utilizados por las vistas, que cambian según la apariencia del sistema.
+También contamos con recursos de imágenes y colores utilizados por las vistas, que cambian según la apariencia del sistema. Los nombres de los colores se mantienen en una extensión de `Color` para evitar repetirlos en cada pantalla.
 
 ### Estado local y compartido
 
@@ -173,7 +175,7 @@ El texto, los resultados y el estado de búsqueda pertenecen a `SearchViewModel`
 
 ### Guardado local
 
-`SavedBooksRepository` utiliza el contexto de SwiftData para consultar, agregar y eliminar libros guardados. `BooksState` consulta esos registros y actualiza `isSaved` en los libros que mostramos. Así, cuando se cierra OpenBooks y se vuelve a abrir, los favoritos pueden recuperarse.
+`OpenBooksApp` crea el contenedor y entrega el servicio a `BooksState`. `SavedBooksRepository` utiliza el contexto de SwiftData para consultar, agregar y eliminar libros guardados. `BooksState` se comunica a través de `FavoriteBooksStore` y actualiza `isSaved` en los libros que mostramos. Así, cuando se cierra OpenBooks y se vuelve a abrir, los favoritos pueden recuperarse.
 
 ---
 
@@ -183,7 +185,7 @@ Para organizar la interfaz diferenciamos entre los valores que solo necesita una
 
 **`@State` en `ContentView`**
 
-Se utiliza para conservar la ruta de navegación, la sección principal que está abierta y las instancias de `SearchViewModel` y `BooksState`. No se trata de guardar dos veces los mismos libros: `ContentView` conserva los objetos que utilizan las demás vistas.
+Se utiliza para conservar la ruta de navegación, la sección principal que está abierta y `SearchViewModel`. `BooksState` se crea una sola vez en `OpenBooksApp`, con el servicio de datos ya configurado, y `ContentView` recibe esa misma instancia. No se crean copias independientes de favoritos en cada pantalla.
 
 **`@State` en `HomeView`**
 
@@ -207,13 +209,13 @@ Aunque tenemos vistas de carga y error, por ahora la búsqueda local no pasa por
 
 ### Ejemplo al guardar un libro
 
-Cuando abrimos *1984* desde Inicio, vemos el botón Agregar a favoritos. Al tocarlo, `BookDetailView` comunica la acción a `ContentView`. Después, `BooksState` solicita el guardado a `SavedBooksRepository` y vuelve a leer los registros. Si el guardado fue correcto, la navegación abre Mis favoritos y *1984* aparece en la lista.
+Cuando abrimos *1984* desde Inicio, vemos el botón Agregar a favoritos. Al tocarlo, `BookDetailView` comunica la acción a `ContentView`. Después, `BooksState` solicita el guardado a través de `FavoriteBooksStore` y vuelve a leer los registros. Si ocurre un error, `BooksState` prepara el mensaje que presenta la interfaz. Si el guardado fue correcto, la navegación abre Mis favoritos y *1984* aparece en la lista.
 
 Si volvemos a abrir el libro desde Mis favoritos, aparece Quitar de favoritos. La eliminación sigue la misma ruta de comunicación. Al volver a entrar a la aplicación, `BooksState` consulta SwiftData para saber cuáles se encuentran guardados.
 
 ### Aspecto claro y oscuro
 
-En Inicio, `HomeView` consulta `colorScheme` para decidir si muestra `HeroReferenceDay` o `HeroReferenceNight`. Los colores de las pantallas se toman de los recursos de color, que incluyen valores para el aspecto claro y oscuro. Esto ya está escrito en el código, pero todavía es necesario revisar en el simulador que el texto, los botones y las imágenes se vean bien en ambos modos.
+En Inicio, `HomeView` consulta `colorScheme` para decidir si muestra `HeroReferenceDay` o `HeroReferenceNight`. Los colores de las pantallas se obtienen mediante una extensión de `Color` y sus recursos de color, que incluyen valores para el aspecto claro y oscuro. Esto ya está escrito en el código, pero todavía es necesario revisar en el simulador que el texto, los botones y las imágenes se vean bien en ambos modos.
 
 ---
 

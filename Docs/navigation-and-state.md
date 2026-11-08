@@ -198,9 +198,9 @@ Mostrar la información del libro seleccionado y permitir agregarlo o quitarlo d
 - No modifica directamente los datos del libro como título, autor, año o portada.
 - Cuando el usuario presiona Agregar a favoritos o Quitar de favoritos, comunica la acción a `ContentView`. Desde ahí se solicita el cambio a `BooksState`, que trabaja con `SavedBooksRepository`.
 
-`BookDetailView` muestra el libro recibido. La colección compartida pertenece a `BooksState`, cuya instancia se mantiene en `ContentView`.
+`BookDetailView` muestra el libro recibido. La colección compartida pertenece a `BooksState`, cuya instancia se crea en `OpenBooksApp` y se entrega a `ContentView`.
 
-La vista de detalle solicita el cambio mediante `onSaveOrDelete`. Después, `ContentView` llama a `booksState.toggleSaved(at:using:)`, que utiliza SwiftData y actualiza los favoritos antes de navegar hacia Mis favoritos.
+La vista de detalle solicita el cambio mediante `onSaveOrDelete`. Después, `ContentView` llama a `booksState.toggleSaved(at:)`. `BooksState` utiliza el servicio de favoritos para guardar el cambio y actualizar la colección antes de navegar hacia Mis favoritos.
 
 **Necesita conservar:**
 
@@ -237,20 +237,20 @@ Mostrar los libros que el usuario ha marcado como guardados.
 **Necesita conservar:**
 
 - Necesita que la colección compartida y el estado de guardado de sus libros permanezcan disponibles mientras el usuario navega por la aplicación.
-- La fuente de verdad de esta información se encuentra en `BooksState`, cuya instancia es mantenida por `ContentView`. Mis favoritos solamente recibe la colección y la muestra.
-- Posteriormente, esta información deberá persistirse localmente para conservarse entre ejecuciones de la aplicación.
+- La fuente de verdad de esta información se encuentra en `BooksState`, cuya instancia es creada por `OpenBooksApp` y compartida mediante `ContentView`. Mis favoritos solamente recibe la colección y la muestra.
+- Los favoritos ya se guardan con SwiftData para conservarse entre ejecuciones de la aplicación.
 
-Mis favoritos no guarda ni elimina registros directamente. Cuando se solicita el cambio desde Detalle, `ContentView` llama a `BooksState`, que utiliza `SavedBooksRepository`. Al terminar, la colección se actualiza y la vista muestra los libros cuyo estado `isSaved` sea verdadero.
+Mis favoritos no guarda ni elimina registros directamente. Cuando se solicita el cambio desde Detalle, `ContentView` llama a `BooksState`, que utiliza el protocolo `FavoriteBooksStore` para comunicarse con `SavedBooksRepository`. Al terminar, la colección se actualiza y la vista muestra los libros cuyo estado `isSaved` sea verdadero.
 
 ---
 
 ### Información adicional en Detalle
 
-La ficha presenta autor, año de publicación y género cuando están disponibles. También muestra la sinopsis y los temas principales. El usuario puede desplazarse para leerla sin perder de vista el botón Agregar o Quitar de favoritos.
+La ficha actual presenta autor, año de publicación y género cuando están disponibles. También muestra sinopsis y temas principales. El usuario puede desplazarse para leerla sin perder de vista el botón Agregar o Quitar de favoritos. No utilizamos campos de idioma original ni título original en el modelo actual.
 
 ### Favoritos al volver a abrir OpenBooks
 
-Al abrir la aplicación, `ContentView` crea `SavedBooksRepository` con el contexto de SwiftData y solicita a `BooksState` que recupere los libros guardados. Por eso la colección no depende únicamente de lo que permanezca en memoria durante una ejecución.
+Al iniciar la aplicación, `OpenBooksApp` prepara el contenedor de SwiftData y crea `BooksState` con el servicio de favoritos. `ContentView` recibe esa instancia y solicita recuperar los libros guardados. Por eso la colección no depende únicamente de lo que permanezca en memoria durante una ejecución.
 
 ---
 
@@ -296,7 +296,7 @@ Por eso, la colección de libros guardados debe ser la fuente de verdad.
 
 La colección que muestran las pantallas se mantiene en `BooksState`, un objeto `@Observable`. Para saber qué libros siguen guardados, utiliza los registros de SwiftData.
 
-`ContentView` mantiene una instancia de `BooksState`. Cuando el usuario agrega o quita un favorito desde Detalle, solicita el cambio con `booksState.toggleSaved(at:using:)`. `SavedBooksRepository` realiza el guardado o la eliminación y `BooksState` vuelve a consultar los registros para actualizar `isSaved`. Mis favoritos muestra esa misma colección.
+`OpenBooksApp` conserva la instancia de `BooksState` y la entrega a `ContentView`. Cuando el usuario agrega o quita un favorito desde Detalle, solicita el cambio con `booksState.toggleSaved(at:)`. `SavedBooksRepository` realiza el guardado o la eliminación y `BooksState` vuelve a consultar los registros para actualizar `isSaved`. Mis favoritos muestra esa misma colección.
 
 De esta forma, Detalle y Mis favoritos trabajan con el mismo estado y no necesitan mantener copias independientes de la información de guardado.
 
@@ -313,7 +313,7 @@ La persistencia y el estado de la interfaz tienen responsabilidades diferentes:
 - El estado compartido permite que las pantallas trabajen con la misma colección durante la ejecución.
 - La persistencia local permite recuperar esa colección cuando la aplicación se vuelva a abrir.
 
-Esta parte ya se implementó mediante `SavedBook`, `SavedBooksRepository` y `BooksState`. El repositorio consulta, guarda y elimina registros; `BooksState` vuelve a leerlos para actualizar `isSaved`.
+Esta parte ya se implementó mediante `SavedBook`, `SavedBooksRepository` y `BooksState`. `OpenBooksApp` prepara el servicio y lo entrega a `BooksState`, que se comunica a través del protocolo `FavoriteBooksStore`. El repositorio consulta, guarda y elimina registros; `BooksState` vuelve a leerlos para actualizar `isSaved` y administra los posibles errores.
 
 ---
 
@@ -384,7 +384,7 @@ Los casos principales son:
 Cuando el usuario guarde o elimine un libro:
 
 1. Detalle solicita guardar o eliminar el libro.
-2. `ContentView` solicita a `BooksState` el cambio mediante `toggleSaved(at:using:)`.
+2. `ContentView` solicita a `BooksState` el cambio mediante `toggleSaved(at:)`.
 3. `SavedBooksRepository` guarda o elimina el registro con SwiftData.
 4. `BooksState` consulta los registros actualizados y modifica `isSaved`.
 5. La aplicación regresa a Mis favoritos, que muestra la colección actualizada.
@@ -405,9 +405,9 @@ Inicio y Resultados muestran una lupa que abre la vista Buscar. El campo editabl
 
 Cuando el usuario presiona Enter desde Buscar, `ContentView` llama a `searchViewModel.searchBooks()` y actualiza la ruta para mostrar Resultados. El ViewModel reconoce las consultas «Harry Potter» y «Orgullo y prejuicio», establece los índices de los libros de prueba y asigna `.content` o `.noResults`. No realiza solicitudes a Open Library ni activa los estados de carga o error.
 
-Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `ContentView` mantiene una instancia de este estado y proporciona la misma colección a las vistas que la necesitan.
+Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `OpenBooksApp` crea una instancia de este estado y `ContentView` proporciona la misma colección a las vistas que la necesitan.
 
-Cuando el usuario agrega o quita un libro desde Detalle, `ContentView` utiliza `booksState.toggleSaved(at:using:)` y `BooksState` realiza la operación por medio de `SavedBooksRepository`. Al terminar, vuelve a consultar los favoritos y Mis favoritos recibe la colección actualizada.
+Cuando el usuario agrega o quita un libro desde Detalle, `ContentView` utiliza `booksState.toggleSaved(at:)` y `BooksState` realiza la operación a través del protocolo `FavoriteBooksStore`, cuya implementación utiliza SwiftData. Al terminar, vuelve a consultar los favoritos y Mis favoritos recibe la colección actualizada.
 
 De esta forma existe una sola fuente de verdad para el estado de guardado y el cambio realizado en una vista puede reflejarse en otra.
 
@@ -433,6 +433,6 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 
 Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales de demostración se encuentran en `OpenBooks/Mocks/MockBooks.swift`.
 
-El detalle muestra la portada, el título, el autor y el año de publicación cuando está disponible. También presenta el género, la sinopsis y los temas principales cuando existen datos. El botón de favoritos permanece visible fuera del área desplazable.
+El detalle muestra la portada, el título, el autor y el año de publicación disponible. Cuando el modelo contiene datos, también presenta el género, una sinopsis y los temas principales. El botón de favoritos permanece visible fuera del área desplazable.
 
 Estos campos adicionales provienen de los diez libros locales de demostración; no se consultan a Open Library ni representan todavía una integración con su API. Los temas y géneros son categorías descriptivas de prueba, no información extraída automáticamente.
