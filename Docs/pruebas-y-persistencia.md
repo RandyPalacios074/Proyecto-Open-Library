@@ -13,28 +13,34 @@ Utilizamos SwiftData para conservar los libros seleccionados, incluso después d
 
 Al guardar un libro, comprobamos si su identificador ya existe. Si ya está registrado, no se agrega otra copia. Si ocurre un problema al guardar o eliminar, mostramos un mensaje en lugar de cambiar la interfaz como si la operación hubiera terminado correctamente.
 
-Actualmente los identificadores de los libros locales se generan a partir del autor y del título. Cuando integremos Open Library tendremos que utilizar los identificadores que proporcione esa fuente.
+Los libros simulados de XCTest conservan identificadores derivados de autor y título. Los resultados remotos utilizan la clave estable de cada obra de Open Library. Al guardar un favorito remoto también conservamos su portada y temas disponibles.
 
 ## Pruebas unitarias con XCTest
 
-Utilizamos XCTest para revisar la búsqueda y el guardado sin depender de una consulta real a Open Library.
+Utilizamos XCTest para revisar las respuestas JSON, la búsqueda y el guardado sin depender de una consulta real a Open Library. Los escenarios de éxito, error y resultados vacíos se prueban con servicios simulados.
 
 ### Búsqueda
 
-1. Buscar «Harry Potter» devuelve los cuatro resultados de prueba correspondientes.
-2. Buscar «Orgullo y prejuicio» devuelve los tres resultados de prueba correspondientes.
-3. Realizar una búsqueda vacía muestra el estado sin resultados.
-4. Buscar un título inexistente después de una búsqueda válida actualiza los resultados y muestra el estado sin resultados.
+1. Una consulta válida obtiene libros del servicio simulado y muestra contenido.
+2. Una respuesta sin libros muestra el estado sin resultados.
+3. Un error del servicio muestra un mensaje y permite volver a consultar.
+4. Una consulta vacía no genera resultados.
+5. Una consulta nueva reemplaza los resultados anteriores.
+6. Repetir la misma consulta no duplica libros en la colección.
+7. La decodificación JSON interpreta título, autores, año, portada y temas.
+8. Si faltan datos opcionales, los modelos pueden decodificarse.
+9. Una respuesta JSON sin documentos se interpreta como una lista vacía.
 
 ### Favoritos
 
-5. Guardar un libro permite recuperarlo mediante otro contexto de SwiftData dentro de la prueba.
-6. Intentar guardar el mismo libro dos veces no genera registros duplicados.
-7. Eliminar un favorito hace que ya no aparezca entre los registros guardados.
-8. Utilizar un índice de libro inválido no modifica los favoritos.
-9. Agregar y quitar un favorito desde `BooksState` mantiene la colección y los registros sincronizados.
-10. Si falla la consulta del servicio de favoritos, `BooksState` prepara un mensaje de error para la interfaz.
-11. Si falla el guardado de un favorito, el estado del libro no se marca como guardado y se informa el error.
+10. Guardar un libro permite recuperarlo mediante otro contexto de SwiftData dentro de la prueba.
+11. Intentar guardar el mismo libro dos veces no genera registros duplicados.
+12. Eliminar un favorito hace que ya no aparezca entre los registros guardados.
+13. Utilizar un índice de libro inválido no modifica los favoritos.
+14. Agregar y quitar un favorito desde `BooksState` mantiene la colección y los registros sincronizados.
+15. Si falla la consulta del servicio de favoritos, `BooksState` prepara un mensaje de error para la interfaz.
+16. Si falla el guardado de un favorito, el estado del libro no se marca como guardado y se informa el error.
+17. Un libro obtenido de Open Library se recupera de SwiftData con su identificador, portada y temas.
 
 Las pruebas de SwiftData utilizan una configuración temporal en memoria y los errores del servicio se comprueban con un servicio simulado. Así podemos comprobar sus operaciones sin modificar la colección de una persona que utilice la aplicación.
 
@@ -53,4 +59,4 @@ Este recorrido permite distinguir entre un favorito que solamente permanece dura
 
 ## Pendientes
 
-Todavía no realizamos consultas a Open Library. Las pruebas de búsqueda utilizan los datos de `MockBooks.swift`. También debemos seguir revisando la interfaz, la accesibilidad y el modo claro y oscuro en el simulador.
+La búsqueda normal ya consulta Open Library mediante HTTPS. Falta confirmar el comportamiento en un dispositivo real y completar la revisión de accesibilidad. La cantidad y disponibilidad de datos dependen de la API externa.

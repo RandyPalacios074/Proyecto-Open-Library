@@ -66,7 +66,7 @@ OpenBooks
 
 **Detalle del libro** se repite dentro de los distintos recorridos únicamente para mostrar desde dónde puede abrirse y a qué pantalla regresa. Corresponde a una misma pantalla reutilizable y no a una tercera sección principal de la aplicación.
 
-Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**. En el prototipo, el estado sin resultados ya se utiliza; las vistas de carga y error están preparadas, pero todavía no se activan durante la búsqueda.
+Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**. En el prototipo, el estado sin resultados ya se utiliza; las vistas de carga y error se activan según la respuesta de Open Library.
 
 De la misma forma, **Lista vacía** pertenece a **Mis favoritos** y **Sin portada** es una condición de presentación de un libro, no una pantalla adicional.
 
@@ -85,8 +85,8 @@ Permitir al usuario consultar la lista inicial de libros, abrir la búsqueda y a
 
 - Nombre de la aplicación.
 - Botón de búsqueda representado por una lupa.
-- Lista inicial de libros.
-- Título y autor de cada libro.
+- Sugerencias de Open Library en una cuadrícula que se recorre hacia abajo.
+- Título de cada libro.
 - Portada cuando esté disponible.
 - Accesos a Inicio y Mis favoritos.
 
@@ -140,15 +140,15 @@ Escribir únicamente modifica el texto. La búsqueda comienza cuando el usuario 
 ### Resultados
 
 **Propósito:**
-Mostrar el resultado de una búsqueda. Actualmente se utilizan libros de prueba; la conexión con Open Library se realizará después.
+Mostrar el resultado de una búsqueda. Actualmente se consultan libros reales mediante Open Library.
 
 **Muestra:**
 
 - Título de la pantalla: Resultados.
-- Lista de libros de prueba correspondiente a la consulta.
-- Vista de carga preparada, todavía no activada por la búsqueda actual.
+- Lista de libros que devuelve Open Library.
+- Vista de carga mientras se espera una respuesta.
 - Estado sin resultados.
-- Vista de error preparada, todavía no activada por la búsqueda actual.
+- Vista de error con el mensaje de la solicitud cuando falla.
 - Acción para volver a intentar la búsqueda, dentro de la vista de error.
 - Botón de búsqueda representado por una lupa.
 
@@ -172,7 +172,7 @@ Estos valores llegan a Resultados mediante `ContentView`.
 **Necesita conservar:**
 
 - Los índices de resultados y el estado de búsqueda, que permanecen en `SearchViewModel` mientras el usuario navega.
-- La colección compartida de libros, que se mantiene en `BooksState`. Por ahora no se descargan ni guardan resultados de una consulta externa.
+- La colección compartida de libros, que se mantiene en `BooksState`. Los resultados reales llegan desde Open Library y los favoritos se guardan localmente.
 
 ---
 
@@ -263,14 +263,14 @@ La organización propuesta es la siguiente:
 | Dato | Quién lo utiliza | Quién lo modifica | Dónde debería vivir | Justificación |
 | --- | --- | --- | --- | --- |
 | Texto de búsqueda | Buscar; Resultados depende de la consulta ejecutada | Usuario desde Buscar, mediante `@Binding` | `SearchViewModel.searchText` | `SearchViewModel` mantiene una sola fuente de verdad; `ContentView` conecta Buscar mediante `@Bindable`. |
-| Resultados de búsqueda | Resultados y Detalle | `SearchViewModel`, al ejecutar `searchBooks()` | `SearchViewModel.resultIndices` | El ViewModel determina los índices de los libros de prueba. Resultados recibe esos índices y la colección de `BooksState` para mostrar las filas. |
-| Estado de búsqueda: loading, content, noResults o error | Resultados | `SearchViewModel`, mediante `searchBooks()` | `SearchViewModel.state` | Actualmente `searchBooks()` asigna `.content` o `.noResults`. Las vistas de carga y error existen, pero aún no se activan durante la búsqueda. |
+| Resultados de búsqueda | Resultados y Detalle | `SearchViewModel`, al ejecutar `searchBooks()` | `SearchViewModel.resultIndices` | El ViewModel obtiene los resultados de Open Library y determina los índices en la colección compartida. Resultados recibe esos índices y la colección de `BooksState` para mostrar las filas. |
+| Estado de búsqueda: loading, content, noResults o error | Resultados | `SearchViewModel`, mediante `searchBooks()` | `SearchViewModel.state` | `searchBooks()` administra carga, contenido, ausencia de resultados y error. |
 | Libros guardados | Mis favoritos y Detalle | `SavedBooksRepository` realiza el guardado; `BooksState` actualiza la colección | `BooksState.books` | La misma colección se comparte entre las vistas; `BooksState` solicita la operación a `SavedBooksRepository` y vuelve a leer los favoritos guardados. |
 | Estado de guardado de un libro | Detalle y Mis favoritos | `SavedBooksRepository` mediante `BooksState` | `isSaved` dentro de `booksState.books` | Detalle solicita la acción, pero no conserva una segunda copia del estado. |
 | Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Índice `Int` durante la navegación | `NavigationLink` envía el índice; `ContentView` obtiene el `Book` de `booksState.books` y lo entrega a Detalle. |
 | Sección principal activa: Inicio o Mis favoritos | Barra inferior y vista raíz | Usuario al cambiar de sección | `ContentView.showingMyBooks` | La vista raíz mantiene esta selección mediante `@State` porque controla las dos secciones principales. |
 | Ruta de navegación | `ContentView` y destinos de navegación | Acciones del usuario coordinadas por `ContentView` | `ContentView.path` | `NavigationStack` utiliza esta ruta para abrir Buscar, Resultados y Detalle. |
-| Título, autor, año y disponibilidad de portada | Inicio, Resultados, Detalle y Mis favoritos | Actualmente, datos locales de prueba; más adelante, Open Library | Modelo `Book` | Son datos propios del libro. `hasCover` indica si aparece un marcador provisional o el estado «Sin portada»; todavía no se descargan portadas reales. |
+| Título, autor, año y disponibilidad de portada | Inicio, Resultados, Detalle y Mis favoritos | Datos reales de Open Library en Inicio y Resultados | Modelo `Book` | Son datos propios del libro. `hasCover` indica si aparece un marcador provisional o el estado «Sin portada»; las portadas remotas se descargan cuando existe un identificador válido. |
 
 ### Estado local y estado compartido
 
@@ -403,7 +403,7 @@ Las filas de libros utilizan `NavigationLink` para abrir el detalle correspondie
 
 Inicio y Resultados muestran una lupa que abre la vista Buscar. El campo editable se encuentra únicamente en Buscar. El texto pertenece a `SearchViewModel`, que `ContentView` mantiene mediante `@State`. Buscar lo modifica con `@Binding`, conectado mediante `@Bindable`. Resultados recibe los índices de los libros seleccionados por el ViewModel, sin mostrar la consulta como un encabezado independiente.
 
-Cuando el usuario presiona Enter desde Buscar, `ContentView` llama a `searchViewModel.searchBooks()` y actualiza la ruta para mostrar Resultados. El ViewModel reconoce las consultas «Harry Potter» y «Orgullo y prejuicio», establece los índices de los libros de prueba y asigna `.content` o `.noResults`. No realiza solicitudes a Open Library ni activa los estados de carga o error.
+Cuando el usuario presiona Enter desde Buscar, `ContentView` llama a `searchViewModel.searchBooks()` y actualiza la ruta para mostrar Resultados. El ViewModel solicita los datos a Open Library mediante el Service y administra carga, contenido, ausencia de resultados y error. La vista presenta estos estados y permite reintentar.
 
 Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `OpenBooksApp` crea una instancia de este estado y `ContentView` proporciona la misma colección a las vistas que la necesitan.
 
@@ -426,13 +426,13 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 9. **El texto y el estado de búsqueda pertenecen a `SearchViewModel`**; Buscar modifica el texto mediante `@Binding` y `ContentView` conserva la navegación.
 10. **El libro seleccionado viajará hacia Detalle como información de navegación**.
 11. **`NavigationStack`, `NavigationLink` y `navigationDestination` son los mecanismos utilizados para organizar el flujo en SwiftUI**.
-12. **La organización de responsabilidades se realiza de forma gradual**: `SearchViewModel` concentra la búsqueda y `BooksState` solicita el guardado o la eliminación a `SavedBooksRepository`. La integración con Open Library sigue pendiente; la persistencia local con SwiftData ya está implementada.
+12. **La organización de responsabilidades se realiza de forma gradual**: `SearchViewModel` concentra la búsqueda y `BooksState` solicita el guardado o la eliminación a `SavedBooksRepository`. La integración con Open Library y la persistencia local con SwiftData están implementadas.
 
 
 ## Organización del proyecto
 
-Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales de demostración se encuentran en `OpenBooks/Mocks/MockBooks.swift`.
+Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales utilizados únicamente en pruebas se encuentran en `OpenBooksTests/MockBooks.swift`.
 
 El detalle muestra la portada, el título, el autor y el año de publicación disponible. Cuando el modelo contiene datos, también presenta el género, una sinopsis y los temas principales. El botón de favoritos permanece visible fuera del área desplazable.
 
-Estos campos adicionales provienen de los diez libros locales de demostración; no se consultan a Open Library ni representan todavía una integración con su API. Los temas y géneros son categorías descriptivas de prueba, no información extraída automáticamente.
+Las sugerencias y los resultados remotos muestran únicamente la información que devuelve Open Library; si falta una sinopsis o género no se inventa. Los temas de los libros remotos proceden de los datos que devuelve Open Library. Los datos simulados se utilizan en las pruebas para representar escenarios de manera repetible.

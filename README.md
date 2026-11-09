@@ -13,7 +13,7 @@
 
 OpenBooks es una aplicación para iOS desarrollada con Swift y SwiftUI. Permite explorar libros, consultar su información y administrar una colección personal de favoritos.
 
-Por ahora utilizamos libros de prueba incluidos en el proyecto. La conexión con Open Library todavía está pendiente. Los favoritos sí se guardan localmente con SwiftData para que sigan disponibles cuando se cierre y se vuelva a abrir la aplicación.
+Las sugerencias de Inicio y los resultados de Buscar se obtienen de la API de Open Library. Los libros de ejemplo utilizados por XCTest permiten comprobar los comportamientos de forma repetible, sin depender de la API. Los favoritos se guardan localmente con SwiftData y siguen disponibles al volver a abrir la aplicación.
 
 ## Objetivo
 
@@ -24,7 +24,7 @@ Permitir que el usuario encuentre libros, consulte su información y pueda agreg
 Las funciones que consideramos para el proyecto y su estado actual son:
 
 - Una pantalla principal con una lista de libros.
-- Búsqueda local con libros de prueba. La consulta a Open Library queda pendiente.
+- Búsqueda de libros con la API REST de Open Library.
 - Visualización de resultados de búsqueda.
 - Visualización del detalle de cada libro.
 - Portada del libro cuando esté disponible.
@@ -35,8 +35,8 @@ Las funciones que consideramos para el proyecto y su estado actual son:
 - Opción para quitar libros de Mis favoritos.
 - Una sección llamada **Mis favoritos**.
 - Persistencia local de los favoritos con SwiftData.
-- Una vista de carga preparada para cuando se incorpore Open Library.
-- Una vista de error preparada para cuando se incorpore Open Library.
+- Un estado de carga mientras se reciben los resultados.
+- Un estado de error con opción para reintentar.
 - Manejo de búsquedas sin resultados.
 - Manejo de libros sin portada.
 - Manejo del estado de lista de libros guardados vacía.
@@ -52,15 +52,15 @@ Desde la pantalla principal, el usuario podrá seleccionar directamente un libro
 
 En Buscar, el usuario podrá escribir el texto de su consulta. La búsqueda se ejecutará cuando presione Enter en el teclado.
 
-En el prototipo actual, la búsqueda utiliza los libros de prueba definidos en `MockBooks.swift`. Todavía no se realizan consultas a Open Library.
+En Inicio se consultan libros de Open Library mediante una búsqueda por tema. Esta selección no representa una clasificación oficial de popularidad. La búsqueda del usuario también realiza una solicitud HTTPS y muestra los libros que devuelve el servicio.
 
-Actualmente la búsqueda de prueba muestra resultados o el estado sin resultados. La carga de información desde Open Library se incorporará después.
+Mientras la petición está en curso se muestra un indicador de carga. Al terminar, aparecen los resultados o el mensaje correspondiente si no existen coincidencias.
 
 Si se obtienen resultados, el usuario podrá seleccionar un libro para acceder a su detalle.
 
 Si la búsqueda no devuelve coincidencias, se mostrará un estado sin resultados. El usuario podrá volver a abrir Buscar desde la lupa para escribir otra consulta.
 
-El estado de error y la opción de intentar nuevamente ya tienen una vista preparada, pero todavía no se utilizan con una consulta real.
+Si ocurre un error de conexión, respuesta HTTP o lectura de datos, la pantalla muestra un mensaje y permite intentar nuevamente.
 
 Desde el detalle del libro se puede consultar el autor, el año de publicación, el género, la sinopsis y los temas disponibles. También se puede guardar o quitar el libro de favoritos.
 
@@ -71,7 +71,7 @@ La sección **Mis favoritos** mostrará los libros almacenados localmente. Desde
 
 Si todavía no existen libros guardados, se mostrará un estado de lista vacía que permitirá al usuario abrir Buscar y realizar una consulta.
 
-Cuando un libro de prueba no tiene portada, mostramos «Sin portada». Algunas sugerencias incluyen ilustraciones locales, que todavía no provienen de Open Library.
+La ilustración del encabezado de Inicio se conserva. Las sugerencias y los resultados remotos pueden mostrar portadas de Open Library cuando existe un identificador disponible; de lo contrario, muestran el estado sin portada.
 
 De esta manera, utilizamos una sola pantalla de detalle y la misma colección de favoritos para los diferentes recorridos. SwiftData conserva los libros seleccionados al cerrar y reabrir OpenBooks.
 
@@ -97,7 +97,7 @@ En la implementación actual, el campo de búsqueda ya no permanece visible en I
 
 ### Resultados de búsqueda
 
-El wireframe muestra cómo planteamos la pantalla de resultados. Actualmente se presentan libros de prueba; todavía no se consulta Open Library.
+El wireframe muestra cómo planteamos la pantalla de resultados. La implementación actual utiliza el servicio de Open Library.
 
 <img width="941" height="1672" alt="02-resultados" src="https://github.com/user-attachments/assets/2832437b-cfa3-40a6-b506-cfcec5a5204c" />
 
@@ -127,23 +127,23 @@ Este estado aparece cuando el usuario todavía no tiene libros guardados.
 
 ### Estados adicionales del MVP
 
-Además de las pantallas principales, consideramos diferentes estados para las búsquedas. Por ahora, los datos son locales; la conexión a Open Library sigue pendiente.
+Además de las pantallas principales, la búsqueda presenta los estados de carga, contenido, ausencia de resultados y error.
 
 #### Búsqueda sin resultados
 
-Se muestra cuando la consulta no coincide con los libros de prueba. El usuario puede realizar otra búsqueda.
+Se muestra cuando Open Library responde correctamente, pero no devuelve libros para la consulta.
 
 #### Carga de resultados
 
-Esta vista está preparada, pero no se activa durante las búsquedas locales. La utilizaremos cuando se consulten datos externos.
+Se muestra mientras se espera la respuesta de Open Library, sin bloquear la navegación.
 
 #### Error en la búsqueda
 
-Esta vista está preparada para mostrar problemas de consulta y permitir intentarlo de nuevo. Todavía no se activa con los datos locales.
+La pantalla muestra un mensaje cuando falla Open Library y permite reintentar la consulta.
 
 #### Libro sin portada
 
-Si un libro no tiene portada en los datos de prueba, la interfaz muestra un elemento sustituto en lugar de dejar el espacio vacío.
+Si un libro no tiene una portada disponible, la interfaz muestra un elemento sustituto en lugar de dejar el espacio vacío.
 
 <img width="1536" height="1024" alt="08-estados-adicionales" src="https://github.com/user-attachments/assets/d4c5124b-5d78-457f-b252-ebaca66c3d95" />
 
@@ -154,7 +154,7 @@ Si un libro no tiene portada en los datos de prueba, la interfaz muestra un elem
 - **SwiftData:** utilizado para guardar y recuperar favoritos localmente.
 - **XCTest:** utilizado para comprobar la búsqueda y las operaciones de favoritos.
 - **Git y GitHub:** utilizados para mantener las versiones del proyecto.
-- **Open Library y async/await:** considerados para la conexión con libros externos, pero todavía no implementados.
+- **URLSession, async/await y Decodable:** utilizados para obtener y decodificar resultados reales de Open Library.
 
 ## Accesibilidad con VoiceOver
 
@@ -353,7 +353,7 @@ Muestra el estado de la sección cuando todavía no existen libros guardados.
 
 ### Carga
 
-Esta es una captura del estado de carga previsto. La vista está preparada, pero no se activa con las búsquedas locales.
+Esta captura corresponde al diseño del estado de carga, que ahora aparece durante las consultas a Open Library.
 
 <table align="center">
   <tr>
@@ -377,7 +377,7 @@ Muestra el estado utilizado cuando no se encuentran libros que coincidan con la 
 
 ### Error en la búsqueda
 
-Esta es una captura del estado de error previsto. La vista está preparada, pero todavía no se activa con las búsquedas locales.
+Esta captura corresponde al diseño del estado de error. Si falla la petición, también se muestra el motivo y la opción de reintentar.
 
 <table align="center">
   <tr>
@@ -389,7 +389,7 @@ Esta es una captura del estado de error previsto. La vista está preparada, pero
 
 ### Libro sin portada
 
-Esta captura corresponde a un estado de portada ausente. Actualmente se utilizan ilustraciones locales en algunas sugerencias y el texto «Sin portada» cuando el libro no tiene imagen disponible en los datos de prueba. No se descargan portadas de Open Library.
+Esta captura muestra el estado sin portada. Las sugerencias y los resultados remotos pueden descargar portadas de Open Library cuando existe una imagen disponible.
 
 <table align="center">
   <tr>
@@ -406,22 +406,22 @@ Actualmente tenemos implementado lo siguiente:
 - Las pantallas **Inicio**, **Buscar**, **Resultados**, **Detalle** y **Mis favoritos** con SwiftUI.
 - La navegación entre pantallas mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
 - Un diseño editorial con colores que cambian según el modo claro u oscuro del sistema. En Inicio también cambia la ilustración del gato, los libros y la lámpara.
-- Un conjunto de sugerencias y la opción **Ver todo** para mostrar más libros de prueba.
+- Sugerencias procedentes de Open Library, con los estados de carga, resultados vacíos y error, además de la visualización de más libros al desplazarse por Inicio.
 - Una vista Buscar que ejecuta la consulta al presionar Enter o Buscar en el teclado.
-- Resultados de prueba para «Harry Potter» y «Orgullo y prejuicio», además de un estado sin resultados.
-- Las vistas de carga y error preparadas para una consulta externa futura.
+- Búsquedas remotas con Open Library y mensajes cuando no existen resultados.
+- Estados de carga y error activos durante las solicitudes de red, con reintento.
 - El detalle del libro con autor, año de publicación, género, sinopsis y temas disponibles. El contenido puede desplazarse y el botón de favoritos permanece en la parte inferior.
 - La sección Mis favoritos y su estado vacío, con acceso a Buscar.
 - El guardado local de favoritos con SwiftData, incluida su recuperación al cerrar y reabrir OpenBooks.
 - La prevención de libros duplicados al guardar el mismo favorito.
 - La separación de modelos, vistas, estado de búsqueda y operaciones de favoritos en diferentes archivos.
 - Etiquetas y encabezados de accesibilidad en varias pantallas. Falta comprobar el recorrido completo con VoiceOver.
-- Once pruebas unitarias XCTest que cubren búsquedas y operaciones de favoritos.
+- Diecisiete pruebas unitarias XCTest que cubren la búsqueda, los modelos de respuesta y las operaciones de favoritos.
 - Los wireframes y las capturas originales de este README, conservados como registro del diseño inicial.
 
-La búsqueda utiliza los libros definidos en `MockBooks.swift`. `SearchViewModel` mantiene el texto, el estado y los resultados; `BooksState` mantiene la colección compartida y recibe un servicio mediante `FavoriteBooksStore`. `SavedBooksRepository` utiliza SwiftData para guardar y recuperar los favoritos.
+`SearchViewModel` solicita libros a `OpenLibraryBookSearchService`, mantiene el estado de la petición y recibe sus resultados. `BooksState` conserva la colección compartida y recupera los favoritos mediante `SavedBooksRepository` y `SavedBook`. La búsqueda utiliza identificadores estables de Open Library.
 
-**Pendiente:** conectar Open Library, obtener portadas y datos reales, verificar el recorrido completo de accesibilidad y revisar visualmente todas las pantallas tanto en modo claro como en modo oscuro. Las imágenes originales de este README no sustituyen esa comprobación visual.
+**Pendiente:** verificar manualmente la conexión en un dispositivo con internet, revisar el recorrido completo de accesibilidad y confirmar todas las pantallas en modo claro y oscuro. Algunos libros de Open Library no incluyen sinopsis ni todos sus datos descriptivos.
 
 ## Ejecución del proyecto
 
