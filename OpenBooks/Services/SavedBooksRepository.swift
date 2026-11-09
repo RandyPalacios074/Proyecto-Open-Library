@@ -3,6 +3,7 @@ import SwiftData
 @MainActor
 protocol FavoriteBooksStore {
     func savedBookIDs() throws -> Set<String>
+    func savedBookSummaries() throws -> [Book]
     func save(_ book: Book) throws -> Bool
     func delete(_ book: Book) throws -> Bool
 }
@@ -21,6 +22,10 @@ final class SavedBooksRepository: FavoriteBooksStore {
 
     func savedBookIDs() throws -> Set<String> {
         Set(try savedBooks().map(\.bookID))
+    }
+
+    func savedBookSummaries() throws -> [Book] {
+        try savedBooks().map { $0.asBook() }
     }
 
     @discardableResult

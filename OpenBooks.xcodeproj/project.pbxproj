@@ -29,6 +29,8 @@
 		D781FF60420F4B4C8B5EF208 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */; };
 		D781FF60420F4B4C8B5EF20A /* SavedBooksRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */; };
 		FA01A9C4251AEFEDB7D09002 /* BookColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01A9C4251AEFEDB7D09001 /* BookColors.swift */; };
+		9F91EE100000000000000102 /* OpenLibrarySearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F91EE100000000000000101 /* OpenLibrarySearchResponse.swift */; };
+		9F91EE100000000000000104 /* OpenLibraryBookSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F91EE100000000000000103 /* OpenLibraryBookSearchService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedBooksRepositoryTests.swift; sourceTree = "<group>"; };
 		D781FF60420F4B4C8B5EF20B /* OpenBooksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBooksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA01A9C4251AEFEDB7D09001 /* BookColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookColors.swift; sourceTree = "<group>"; };
+		9F91EE100000000000000101 /* OpenLibrarySearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLibrarySearchResponse.swift; sourceTree = "<group>"; };
+		9F91EE100000000000000103 /* OpenLibraryBookSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLibraryBookSearchService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -86,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				20F8842AC2160C56AD5E3FE6 /* Book.swift */,
+				9F91EE100000000000000101 /* OpenLibrarySearchResponse.swift */,
 				D781FF60420F4B4C8B5EF201 /* SavedBook.swift */,
 			);
 			path = Models;
@@ -148,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				D781FF60420F4B4C8B5EF203 /* SavedBooksRepository.swift */,
+				9F91EE100000000000000103 /* OpenLibraryBookSearchService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -264,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D16D5863C9CFDED9C641AFE1 /* Book.swift in Sources */,
+				9F91EE100000000000000102 /* OpenLibrarySearchResponse.swift in Sources */,
 				F7DC327706B2DEAB1005C560 /* BookDetailView.swift in Sources */,
 				ED02DC1AA9ABC7A1E6CE9347 /* ContentView.swift in Sources */,
 				938F937FC32C7D9F449B8361 /* HomeView.swift in Sources */,
@@ -282,6 +289,7 @@
 				AF44FD8311385EC8A220D65E /* SearchViewState.swift in Sources */,
 				D781FF60420F4B4C8B5EF202 /* SavedBook.swift in Sources */,
 				D781FF60420F4B4C8B5EF204 /* SavedBooksRepository.swift in Sources */,
+				9F91EE100000000000000104 /* OpenLibraryBookSearchService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

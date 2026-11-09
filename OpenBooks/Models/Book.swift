@@ -1,4 +1,4 @@
-struct Book {
+struct Book: Sendable {
     let id: String
     let title: String
     let author: String
@@ -8,10 +8,11 @@ struct Book {
     let synopsis: String?
     let genre: String?
     let themes: [String]
+    let coverID: Int?
 
     init(title: String, author: String, year: String?, hasCover: Bool,
          isSaved: Bool, synopsis: String? = nil, genre: String? = nil,
-         themes: [String] = [], id: String? = nil) {
+         themes: [String] = [], id: String? = nil, coverID: Int? = nil) {
         self.id = id ?? "\(author)|\(title)"
         self.title = title
         self.author = author
@@ -21,5 +22,6 @@ struct Book {
         self.synopsis = synopsis
         self.genre = genre
         self.themes = themes
+        self.coverID = coverID
     }
 }
