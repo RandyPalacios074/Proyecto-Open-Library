@@ -1,21 +1,39 @@
+import Foundation
 import Observation
 
+@MainActor
 @Observable
 final class SearchViewModel {
-    var searchText: String = ""
-    var state: SearchViewState = .content
-    var resultIndices: [Int] = []
+    var searchText = ""
+    private(set) var state: SearchViewState = .noResults
+    private(set) var resultIndices: [Int] = []
 
-    func searchBooks() {
-        if searchText == "Harry Potter" {
-            resultIndices = Array(3..<7)
-            state = .content
-        } else if searchText == "Orgullo y prejuicio" {
-            resultIndices = Array(7..<10)
-            state = .content
-        } else {
-            resultIndices = []
+    private let service: any BookSearchService
+    private let booksState: BooksState
+
+    init(service: any BookSearchService, booksState: BooksState) {
+        self.service = service
+        self.booksState = booksState
+    }
+
+    func searchBooks() async {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        resultIndices = []
+
+        guard !query.isEmpty else {
             state = .noResults
+            return
+        }
+
+        state = .loading
+        do {
+            let results = try await service.searchBooks(query: query)
+            try Task.checkCancellation()
+            resultIndices = booksState.addSearchResults(results)
+            state = resultIndices.isEmpty ? .noResults : .content
+        } catch {
+            if Task.isCancelled { return }
+            state = .error(error.localizedDescription)
         }
     }
 }

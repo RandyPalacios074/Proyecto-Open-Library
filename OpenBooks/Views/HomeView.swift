@@ -3,20 +3,21 @@ import SwiftUI
 struct HomeView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @State private var showingAllSuggestions = false
 
     let books: [Book]
+    let suggestionIndices: [Int]
+    let suggestionsState: SearchViewState
+    let onRetrySuggestions: () -> Void
     let onOpenSearch: () -> Void
     let onMyBooks: () -> Void
 
-    private var featuredIndices: [Int] { [3, 2, 7] }
-
     private var visibleIndices: [Int] {
-        let main = featuredIndices.filter { books.indices.contains($0) }
-        if showingAllSuggestions {
-            return main + books.indices.filter { !main.contains($0) }
-        }
-        return main
+        suggestionIndices.filter { books.indices.contains($0) }
+    }
+
+    private var suggestionColumns: [GridItem] {
+        [GridItem(.adaptive(minimum: dynamicTypeSize.isAccessibilitySize ? 220 : 145,
+                            maximum: dynamicTypeSize.isAccessibilitySize ? 360 : 180), spacing: 16)]
     }
 
     var body: some View {
@@ -61,47 +62,74 @@ struct HomeView: View {
                     .accessibilityHint("Abre la pantalla de búsqueda")
 
                     VStack(alignment: .leading, spacing: 18) {
-                        HStack(alignment: .firstTextBaseline) {
-                            Text("Sugerencias")
-                                .font(.system(.title2, design: .serif, weight: .semibold))
-                                .foregroundStyle(Color.appInk)
-                                .accessibilityAddTraits(.isHeader)
-                            Spacer()
-                            Button {
-                                showingAllSuggestions.toggle()
-                            } label: {
-                                HStack(spacing: 3) {
-                                    Text(showingAllSuggestions ? "Ver menos" : "Ver todo")
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption.weight(.semibold))
-                                }
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Color.appAccent)
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityHint("Muestra u oculta los demás libros de prueba")
+                        Text("Sugerencias")
+                            .font(.system(.title2, design: .serif, weight: .semibold))
+                            .foregroundStyle(Color.appInk)
+                            .accessibilityAddTraits(.isHeader)
+
+                        if suggestionsState == .content {
+                            Text("De Open Library")
+                                .font(.caption)
+                                .foregroundStyle(Color.appMuted)
                         }
 
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 14), count: 3), spacing: 20) {
-                            ForEach(visibleIndices, id: \.self) { index in
-                                NavigationLink(value: index) {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        editorialCover(for: index)
-                                            .aspectRatio(138.0 / 178.0, contentMode: .fit)
+                        if suggestionsState == .content {
+                            LazyVGrid(columns: suggestionColumns, alignment: .center, spacing: 24) {
+                                ForEach(visibleIndices, id: \.self) { index in
+                                    NavigationLink(value: index) {
+                                        VStack(spacing: 9) {
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 11)
+                                                    .fill(Color.appNavSurface)
+                                                editorialCover(for: index)
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity,
+                                                           alignment: .center)
+                                                    .padding(3)
+                                            }
+                                            .aspectRatio(2.0 / 3.0, contentMode: .fit)
+                                            .frame(maxWidth: .infinity)
                                             .clipShape(RoundedRectangle(cornerRadius: 11))
 
-                                        Text(shortTitle(for: index))
-                                            .font(.subheadline.weight(.medium))
-                                            .foregroundStyle(Color.appInk)
-                                            .lineLimit(3)
-                                            .multilineTextAlignment(.center)
-                                            .frame(maxWidth: .infinity, alignment: .top)
+                                            Text(shortTitle(for: index))
+                                                .font(.subheadline.weight(.medium))
+                                                .foregroundStyle(Color.appInk)
+                                                .lineLimit(3)
+                                                .multilineTextAlignment(.center)
+                                                .frame(maxWidth: .infinity, minHeight: 60,
+                                                       alignment: .top)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .top)
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .top)
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel(books[index].title)
+                                    .accessibilityIdentifier("sugerencia-\(index)")
+                                    .accessibilityHint("Abre el detalle del libro")
                                 }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel(books[index].title)
-                                .accessibilityHint("Abre el detalle del libro")
+                            }
+                        } else {
+                            switch suggestionsState {
+                            case .loading:
+                                ProgressView("Buscando sugerencias...")
+                                    .frame(maxWidth: .infinity, minHeight: 120)
+                            case .noResults:
+                                Text("No hay sugerencias disponibles.")
+                                    .foregroundStyle(Color.appMuted)
+                                    .frame(maxWidth: .infinity, minHeight: 120)
+                            case .error(let message):
+                                VStack(alignment: .leading, spacing: 12) {
+                                    Text("No se pudieron cargar las sugerencias")
+                                        .font(.headline)
+                                        .foregroundStyle(Color.appInk)
+                                    Text(message)
+                                        .font(.subheadline)
+                                        .foregroundStyle(Color.appMuted)
+                                    Button("Intentar nuevamente", action: onRetrySuggestions)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Color.appAccent)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            case .content:
+                                EmptyView()
                             }
                         }
                     }
@@ -119,20 +147,10 @@ struct HomeView: View {
     }
 
     private func shortTitle(for index: Int) -> String {
-        if index == 3 { return "Harry Potter" }
-        return books[index].title
+        books[index].title
     }
 
-    @ViewBuilder
     private func editorialCover(for index: Int) -> some View {
-        if index == 3 {
-            Image("EditorialHarry").resizable().scaledToFit()
-        } else if index == 2 {
-            Image("Editorial1984").resizable().scaledToFit()
-        } else if index == 7 {
-            Image("EditorialPride").resizable().scaledToFit()
-        } else {
-            BookCoverArtworkView(book: books[index])
-        }
+        BookCoverArtworkView(book: books[index])
     }
 }

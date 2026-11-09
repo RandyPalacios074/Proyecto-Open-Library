@@ -5,6 +5,7 @@ struct SearchResultsView: View {
     let books: [Book]
     let state: SearchViewState
 
+
     let onOpenSearch: () -> Void
     let onRetry: () -> Void
     let onHome: () -> Void
@@ -13,6 +14,7 @@ struct SearchResultsView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 20) {
+
 
                 HStack {
                     Text("Resultados")
@@ -76,11 +78,12 @@ struct SearchResultsView: View {
                     Spacer()
                 }
 
-            case .error:
+            case .error(let message):
                 VStack(spacing: 0) {
                     Spacer()
 
                     SearchErrorView(
+                        message: message,
                         onRetry: onRetry
                     )
                     .padding(.horizontal, 20)
@@ -169,6 +172,7 @@ struct NoResultsView: View {
 }
 
 struct SearchErrorView: View {
+    let message: String
     let onRetry: () -> Void
 
     var body: some View {
@@ -196,7 +200,7 @@ struct SearchErrorView: View {
             HStack {
                 Spacer()
 
-                Text("Ocurrió un error al obtener los resultados.")
+                Text(message)
                     .foregroundStyle(Color.appMuted)
 
                 Spacer()
