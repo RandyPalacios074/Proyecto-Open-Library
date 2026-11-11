@@ -1,6 +1,6 @@
-enum SearchViewState {
+enum SearchViewState: Equatable {
     case loading
     case content
     case noResults
-    case error
+    case error(String)
 }

@@ -28,6 +28,10 @@
 		D781FF60420F4B4C8B5EF204 /* SavedBooksRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF203 /* SavedBooksRepository.swift */; };
 		D781FF60420F4B4C8B5EF208 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */; };
 		D781FF60420F4B4C8B5EF20A /* SavedBooksRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */; };
+		FA01A9C4251AEFEDB7D09002 /* BookColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01A9C4251AEFEDB7D09001 /* BookColors.swift */; };
+		9F91EE100000000000000102 /* OpenLibrarySearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F91EE100000000000000101 /* OpenLibrarySearchResponse.swift */; };
+		9F91EE100000000000000104 /* OpenLibraryBookSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F91EE100000000000000103 /* OpenLibraryBookSearchService.swift */; };
+		9F91EE100000000000000106 /* OpenLibraryResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F91EE100000000000000105 /* OpenLibraryResponseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +58,10 @@
 		D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
 		D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedBooksRepositoryTests.swift; sourceTree = "<group>"; };
 		D781FF60420F4B4C8B5EF20B /* OpenBooksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenBooksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA01A9C4251AEFEDB7D09001 /* BookColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookColors.swift; sourceTree = "<group>"; };
+		9F91EE100000000000000101 /* OpenLibrarySearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLibrarySearchResponse.swift; sourceTree = "<group>"; };
+		9F91EE100000000000000103 /* OpenLibraryBookSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLibraryBookSearchService.swift; sourceTree = "<group>"; };
+		9F91EE100000000000000105 /* OpenLibraryResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLibraryResponseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -74,7 +82,6 @@
 				4174006B35405C43A2F46785 /* Views */,
 				2105600932F8415DA0B391CF /* ViewModels */,
 				D781FF60420F4B4C8B5EF205 /* Services */,
-				BC85002D42BC5F23A625AFB7 /* Mocks */,
 				2EC06E7ADD4840E4857405D2 /* Assets.xcassets */,
 			);
 			path = OpenBooks;
@@ -84,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				20F8842AC2160C56AD5E3FE6 /* Book.swift */,
+				9F91EE100000000000000101 /* OpenLibrarySearchResponse.swift */,
 				D781FF60420F4B4C8B5EF201 /* SavedBook.swift */,
 			);
 			path = Models;
@@ -110,18 +118,12 @@
 				A9669C2BD8E85BA3997576E1 /* BookCoverArtworkView.swift */,
 				9E6BFE13061955689F0F4635 /* BottomNavigationView.swift */,
 				CB6922567E485F84891ED820 /* EmptyMyBooksView.swift */,
+				FA01A9C4251AEFEDB7D09001 /* BookColors.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		BC85002D42BC5F23A625AFB7 /* Mocks */ = {
-			isa = PBXGroup;
-			children = (
-				146723884D8BBF1B20118515 /* MockBooks.swift */,
-			);
-			path = Mocks;
-			sourceTree = "<group>";
-		};
+
 		2105600932F8415DA0B391CF /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				D781FF60420F4B4C8B5EF203 /* SavedBooksRepository.swift */,
+				9F91EE100000000000000103 /* OpenLibraryBookSearchService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -153,7 +156,9 @@
 			isa = PBXGroup;
 			children = (
 				D781FF60420F4B4C8B5EF207 /* SearchViewModelTests.swift */,
+				146723884D8BBF1B20118515 /* MockBooks.swift */,
 				D781FF60420F4B4C8B5EF209 /* SavedBooksRepositoryTests.swift */,
+				9F91EE100000000000000105 /* OpenLibraryResponseTests.swift */,
 			);
 			path = OpenBooksTests;
 			sourceTree = "<group>";
@@ -261,10 +266,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D16D5863C9CFDED9C641AFE1 /* Book.swift in Sources */,
+				9F91EE100000000000000102 /* OpenLibrarySearchResponse.swift in Sources */,
 				F7DC327706B2DEAB1005C560 /* BookDetailView.swift in Sources */,
 				ED02DC1AA9ABC7A1E6CE9347 /* ContentView.swift in Sources */,
 				938F937FC32C7D9F449B8361 /* HomeView.swift in Sources */,
-				3B49C3576D7D4D588A2E11FD /* MockBooks.swift in Sources */,
 				80B77C2187440571B116FCC5 /* MyBooksView.swift in Sources */,
 				B8664D3ACE2D806AB35A8592 /* OpenBooksApp.swift in Sources */,
 				7C66C4C58F197BC5957685A0 /* SearchResultsView.swift in Sources */,
@@ -274,10 +279,12 @@
 				17FC5D3538DF5627A7888809 /* BookCoverArtworkView.swift in Sources */,
 				3F54B3ACD0515E36A2BD9658 /* BottomNavigationView.swift in Sources */,
 				335F56DFE92258338BDB8C5C /* EmptyMyBooksView.swift in Sources */,
+				FA01A9C4251AEFEDB7D09002 /* BookColors.swift in Sources */,
 				40D021A71AE35AD997A61563 /* BooksState.swift in Sources */,
 				AF44FD8311385EC8A220D65E /* SearchViewState.swift in Sources */,
 				D781FF60420F4B4C8B5EF202 /* SavedBook.swift in Sources */,
 				D781FF60420F4B4C8B5EF204 /* SavedBooksRepository.swift in Sources */,
+				9F91EE100000000000000104 /* OpenLibraryBookSearchService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,7 +293,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D781FF60420F4B4C8B5EF208 /* SearchViewModelTests.swift in Sources */,
+				3B49C3576D7D4D588A2E11FD /* MockBooks.swift in Sources */,
 				D781FF60420F4B4C8B5EF20A /* SavedBooksRepositoryTests.swift in Sources */,
+				9F91EE100000000000000106 /* OpenLibraryResponseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

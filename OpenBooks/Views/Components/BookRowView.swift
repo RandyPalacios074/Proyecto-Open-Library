@@ -11,15 +11,15 @@ struct BookRowView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(book.title)
                         .font(.headline)
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                     Text(book.author)
                         .font(.subheadline)
-                        .foregroundStyle(Color("Muted"))
+                        .foregroundStyle(Color.appMuted)
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.right")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color("Muted"))
+                    .foregroundStyle(Color.appMuted)
                     .accessibilityHidden(true)
             }
             .padding(.vertical, 17)

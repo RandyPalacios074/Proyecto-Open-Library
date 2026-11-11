@@ -1,3 +1,5 @@
+@testable import OpenBooks
+
 let mockBooks: [Book] = [
     Book(
         title: "Cien años de soledad",

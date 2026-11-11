@@ -7,26 +7,43 @@ struct BottomNavigationView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            tabButton(title: "Inicio", symbol: homeActive ? "house.fill" : "house", selected: homeActive, action: onHome)
-            tabButton(title: "Mis favoritos", symbol: homeActive ? "bookmark" : "bookmark.fill", selected: !homeActive, action: onMyBooks)
+            BottomTabButton(
+                title: "Inicio",
+                symbol: homeActive ? "house.fill" : "house",
+                selected: homeActive,
+                action: onHome
+            )
+            BottomTabButton(
+                title: "Mis favoritos",
+                symbol: homeActive ? "bookmark" : "bookmark.fill",
+                selected: !homeActive,
+                action: onMyBooks
+            )
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 8)
-        .background(Color("NavSurface"), in: RoundedRectangle(cornerRadius: 22))
-        .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color("Border"), lineWidth: 0.7))
+        .background(Color.appNavSurface, in: RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(Color.appBorder, lineWidth: 0.7))
         .padding(.horizontal, 16)
         .padding(.bottom, 6)
     }
+}
 
-    private func tabButton(title: String, symbol: String, selected: Bool, action: @escaping () -> Void) -> some View {
+private struct BottomTabButton: View {
+    let title: String
+    let symbol: String
+    let selected: Bool
+    let action: () -> Void
+
+    var body: some View {
         Button(action: action) {
             VStack(spacing: 4) {
                 if title == "Mis favoritos" {
                     WideBookmarkShape()
-                        .fill(selected ? Color("Accent") : Color.clear)
+                        .fill(selected ? Color.appAccent : Color.clear)
                         .overlay {
                             WideBookmarkShape()
-                                .stroke(selected ? Color("Accent") : Color("Muted"),
+                                .stroke(selected ? Color.appAccent : Color.appMuted,
                                         style: StrokeStyle(lineWidth: 1.9, lineJoin: .round))
                         }
                         .frame(width: 25, height: 27)
@@ -43,7 +60,7 @@ struct BottomNavigationView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.85)
             }
-            .foregroundStyle(selected ? Color("Accent") : Color("Muted"))
+            .foregroundStyle(selected ? Color.appAccent : Color.appMuted)
             .frame(maxWidth: .infinity)
             .frame(minHeight: 52)
             .contentShape(Rectangle())

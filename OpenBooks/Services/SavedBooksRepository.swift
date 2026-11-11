@@ -1,7 +1,15 @@
 import SwiftData
 
 @MainActor
-final class SavedBooksRepository {
+protocol FavoriteBooksStore {
+    func savedBookIDs() throws -> Set<String>
+    func savedBookSummaries() throws -> [Book]
+    func save(_ book: Book) throws -> Bool
+    func delete(_ book: Book) throws -> Bool
+}
+
+@MainActor
+final class SavedBooksRepository: FavoriteBooksStore {
     private let context: ModelContext
 
     init(context: ModelContext) {
@@ -10,6 +18,14 @@ final class SavedBooksRepository {
 
     func savedBooks() throws -> [SavedBook] {
         try context.fetch(FetchDescriptor<SavedBook>())
+    }
+
+    func savedBookIDs() throws -> Set<String> {
+        Set(try savedBooks().map(\.bookID))
+    }
+
+    func savedBookSummaries() throws -> [Book] {
+        try savedBooks().map { $0.asBook() }
     }
 
     @discardableResult
