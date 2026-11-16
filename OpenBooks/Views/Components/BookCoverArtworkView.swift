@@ -70,9 +70,35 @@ private final class BookCoverCache {
 
 struct BookCoverArtworkView: View {
     let book: Book
+    let maximumSize: CGSize?
+    let fillsFrame: Bool
     @State private var remoteImage: UIImage?
     @State private var coverLoading = false
     @State private var attempted = false
+
+    init(book: Book, maximumSize: CGSize? = nil, fillsFrame: Bool = false) {
+        self.book = book
+        self.maximumSize = maximumSize
+        self.fillsFrame = fillsFrame
+    }
+
+    private var imageAspectRatio: CGFloat {
+        if let remoteImage, remoteImage.size.height > 0 {
+            return remoteImage.size.width / remoteImage.size.height
+        }
+        if book.coverID == nil, let imageName, let image = UIImage(named: imageName),
+           image.size.height > 0 {
+            return image.size.width / image.size.height
+        }
+        return 2.0 / 3.0
+    }
+
+    private var fittedSize: CGSize? {
+        guard let maximumSize else { return nil }
+        let ratio = imageAspectRatio
+        let width = min(maximumSize.width, maximumSize.height * ratio)
+        return CGSize(width: width, height: width / ratio)
+    }
 
     private var imageName: String? {
         switch book.title {
@@ -105,7 +131,7 @@ struct BookCoverArtworkView: View {
                 if let remoteImage {
                     Image(uiImage: remoteImage)
                         .resizable()
-                        .scaledToFit()
+                        .aspectRatio(contentMode: fillsFrame ? .fill : .fit)
                 } else if coverLoading || !attempted {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.appNavSurface)
@@ -116,11 +142,12 @@ struct BookCoverArtworkView: View {
             } else if book.hasCover, let imageName {
                 Image(imageName)
                     .resizable()
-                    .scaledToFit()
+                    .aspectRatio(contentMode: fillsFrame ? .fill : .fit)
             } else {
                 missingCover
             }
         }
+        .frame(width: fittedSize?.width, height: fittedSize?.height)
         .accessibilityLabel(book.coverID != nil ? "Portada del libro \(book.title)" :
                             (book.hasCover && imageName != nil
                              ? "Ilustración del libro \(book.title)" : "Sin portada"))
@@ -153,8 +180,7 @@ struct LargeBookCoverView: View {
     let book: Book
 
     var body: some View {
-        BookCoverArtworkView(book: book)
-            .frame(width: 210, height: 300)
+        BookCoverArtworkView(book: book, maximumSize: CGSize(width: 210, height: 300))
             .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }

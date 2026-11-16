@@ -72,13 +72,11 @@ struct HomeView: View {
                                 ForEach(visibleIndices, id: \.self) { index in
                                     NavigationLink(value: index) {
                                         VStack(spacing: 9) {
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 11)
-                                                    .fill(Color.appNavSurface)
-                                                BookCoverArtworkView(book: books[index])
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity,
-                                                           alignment: .center)
-                                                    .padding(3)
+                                            GeometryReader { geometry in
+                                                BookCoverArtworkView(book: books[index], fillsFrame: true)
+                                                    .frame(width: geometry.size.width,
+                                                           height: geometry.size.height)
+                                                    .clipped()
                                             }
                                             .aspectRatio(2.0 / 3.0, contentMode: .fit)
                                             .frame(maxWidth: .infinity)
