@@ -30,6 +30,7 @@ struct SearchFieldView: View {
                 .tint(Color.appAccent)
                 .submitLabel(.search)
                 .accessibilityLabel("Buscar libros")
+                .accessibilityIdentifier("book-search-field")
                 .onSubmit {
                     onSearch()
                 }

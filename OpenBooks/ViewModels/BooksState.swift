@@ -4,12 +4,12 @@ import Observation
 @MainActor
 @Observable
 final class BooksState {
-    private let store: any FavoriteBooksStore
+    private let store: FavoriteBooksStore
     var books: [Book]
     var showingPersistenceError = false
     var persistenceErrorMessage = ""
 
-    init(store: any FavoriteBooksStore, books: [Book] = []) {
+    init(store: FavoriteBooksStore, books: [Book] = []) {
         self.store = store
         self.books = books
     }
@@ -27,9 +27,27 @@ final class BooksState {
         var indices: [Int] = []
         for book in results {
             if let index = books.firstIndex(where: { $0.id == book.id }) {
-                var updated = book
-                updated.isSaved = books[index].isSaved
+                let previous = books[index]
+                let updated = Book(
+                    title: book.title,
+                    author: book.author,
+                    year: book.year ?? previous.year,
+                    hasCover: book.hasCover || previous.hasCover,
+                    isSaved: previous.isSaved,
+                    synopsis: book.synopsis ?? previous.synopsis,
+                    genre: book.genre ?? previous.genre,
+                    themes: book.themes.isEmpty ? previous.themes : book.themes,
+                    id: book.id,
+                    coverID: book.coverID ?? previous.coverID
+                )
                 books[index] = updated
+                if updated.isSaved && updated.coverID != previous.coverID {
+                    do {
+                        try store.updateMetadata(updated)
+                    } catch {
+                        showPersistenceError(error)
+                    }
+                }
                 if !indices.contains(index) {
                     indices.append(index)
                 }
@@ -41,7 +59,32 @@ final class BooksState {
         return indices
     }
 
-    @discardableResult
+    func applyWorkDetails(_ details: OpenLibraryWorkDetails, at index: Int) {
+        guard books.indices.contains(index) else { return }
+        let book = books[index]
+        let updated = Book(
+            title: book.title,
+            author: book.author,
+            year: book.year,
+            hasCover: book.hasCover || details.coverID != nil,
+            isSaved: book.isSaved,
+            synopsis: details.description ?? book.synopsis,
+            genre: book.genre,
+            themes: details.themes.isEmpty ? book.themes : details.themes,
+            id: book.id,
+            coverID: book.coverID ?? details.coverID
+        )
+        books[index] = updated
+
+        if updated.isSaved {
+            do {
+                try store.updateMetadata(updated)
+            } catch {
+                showPersistenceError(error)
+            }
+        }
+    }
+
     func toggleSaved(at index: Int) -> Bool {
         guard books.indices.contains(index) else { return false }
 

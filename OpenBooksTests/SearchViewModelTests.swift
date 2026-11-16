@@ -18,6 +18,22 @@ final class SearchViewModelTests: XCTestCase {
         XCTAssertEqual(state.books[viewModel.resultIndices[0]].title, "El hobbit")
     }
 
+    func testSearchShowsLoadingBeforeNavigationAndEmptyOnlyAfterResponse() async {
+        let viewModel = SearchViewModel(
+            service: TestSearchService(books: []), booksState: makeBooksState()
+        )
+        viewModel.searchText = "Libro inexistente"
+
+        viewModel.prepareForSearch()
+
+        XCTAssertEqual(viewModel.state, .loading)
+        XCTAssertTrue(viewModel.resultIndices.isEmpty)
+
+        await viewModel.searchBooks()
+
+        XCTAssertEqual(viewModel.state, .noResults)
+    }
+
     func testSuccessfulSearchWithoutBooksShowsEmptyState() async {
         let viewModel = SearchViewModel(service: TestSearchService(books: []), booksState: makeBooksState())
         viewModel.searchText = "Libro que no existe"
@@ -78,6 +94,29 @@ final class SearchViewModelTests: XCTestCase {
 
         XCTAssertEqual(state.books.count, count)
         XCTAssertEqual(viewModel.resultIndices.count, 1)
+    }
+
+    func testSearchDoesNotEraseExistingCoverOrDescription() async {
+        let first = Book(title: "El hobbit", author: "Tolkien", year: "1937",
+                         hasCover: true, isSaved: false,
+                         synopsis: "Una aventura.", id: "/works/OL100W", coverID: 25)
+        let incomplete = Book(title: "El hobbit", author: "Tolkien", year: nil,
+                              hasCover: false, isSaved: false,
+                              id: "/works/OL100W")
+        let state = makeBooksState()
+        let original = SearchViewModel(service: TestSearchService(books: [first]), booksState: state)
+        original.searchText = "El hobbit"
+        await original.searchBooks()
+
+        let second = SearchViewModel(service: TestSearchService(books: [incomplete]), booksState: state)
+        second.searchText = "El hobbit"
+        await second.searchBooks()
+
+        let book = state.books[second.resultIndices[0]]
+        XCTAssertEqual(book.coverID, 25)
+        XCTAssertEqual(book.year, "1937")
+        XCTAssertEqual(book.synopsis, "Una aventura.")
+        XCTAssertTrue(book.hasCover)
     }
 
     private func makeBooksState() -> BooksState {

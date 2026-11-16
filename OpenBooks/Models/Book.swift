@@ -1,4 +1,4 @@
-struct Book: Sendable {
+struct Book: Codable, Sendable {
     let id: String
     let title: String
     let author: String

@@ -206,15 +206,6 @@ struct SearchErrorView: View {
                 Spacer()
             }
 
-            HStack {
-                Spacer()
-
-                Text("Intenta nuevamente.")
-                    .foregroundStyle(Color.appMuted)
-
-                Spacer()
-            }
-
             Button {
                 onRetry()
             } label: {

@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import SwiftData
 
@@ -5,17 +6,17 @@ import SwiftData
 @MainActor
 struct OpenBooksApp: App {
     private let container: ModelContainer
-    private let searchService: any BookSearchService
+    private let searchService: BookSearchService
     @State private var booksState: BooksState
 
     init() {
         do {
             let modelContainer = try ModelContainer(for: SavedBook.self)
             container = modelContainer
-            searchService = OpenLibraryBookSearchService()
             _booksState = State(initialValue: BooksState(
                 store: SavedBooksRepository(context: modelContainer.mainContext)
             ))
+            searchService = OpenLibraryBookSearchService()
         } catch {
             fatalError("No se pudo iniciar el almacenamiento: \(error)")
         }

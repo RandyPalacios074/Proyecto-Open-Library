@@ -8,17 +8,20 @@ struct ContentView: View {
     @State private var suggestionsViewModel: SearchViewModel
     @State private var suggestionsStarted = false
     @State private var activeSearch: Task<Void, Never>?
+    private let detailsService: BookDetailsService?
 
     let resultsRoute = -1
     let searchRoute = -2
 
-    init(booksState: BooksState, searchService: any BookSearchService) {
+    init(booksState: BooksState, searchService: BookSearchService) {
         self.booksState = booksState
+        self.detailsService = OpenLibraryBookDetailsService()
         _searchViewModel = State(initialValue: SearchViewModel(
             service: searchService,
             booksState: booksState
         ))
-        let suggestions = SearchViewModel(service: searchService, booksState: booksState)
+        let suggestions = SearchViewModel(service: searchService, booksState: booksState,
+                                          cacheSuggestions: true)
         suggestions.searchText = "subject:fiction"
         _suggestionsViewModel = State(initialValue: suggestions)
     }
@@ -76,6 +79,10 @@ struct ContentView: View {
                 } else if booksState.books.indices.contains(route) {
                     BookDetailView(
                         book: booksState.books[route],
+                        detailsService: detailsService,
+                        onDetailsLoaded: { details in
+                            booksState.applyWorkDetails(details, at: route)
+                        },
                         homeActive: !showingMyBooks,
                         onSaveOrDelete: {
                             if booksState.toggleSaved(at: route) {
@@ -99,7 +106,8 @@ struct ContentView: View {
             booksState.loadFavorites()
             if !suggestionsStarted {
                 suggestionsStarted = true
-                Task { await suggestionsViewModel.searchBooks() }
+                suggestionsViewModel.restoreCachedSuggestions()
+                Task { await suggestionsViewModel.searchBooks(retainingResults: true) }
             }
         }
         .alert("No se pudieron actualizar los favoritos", isPresented: $favorites.showingPersistenceError) {
@@ -111,6 +119,7 @@ struct ContentView: View {
 
     private func searchBooks() {
         activeSearch?.cancel()
+        searchViewModel.prepareForSearch()
         path = [resultsRoute]
         activeSearch = Task {
             await searchViewModel.searchBooks()
