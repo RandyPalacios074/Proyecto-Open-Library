@@ -37,4 +37,42 @@ final class OpenLibraryResponseTests: XCTestCase {
         let response = try JSONDecoder().decode(OpenLibrarySearchResponse.self, from: data)
         XCTAssertTrue(response.docs.isEmpty)
     }
+
+    func testWorkDescriptionAsText() throws {
+        let data = Data(#"{"description":"Historia de una aventura.","subjects":["Fantasía"]}"#.utf8)
+        let details = try JSONDecoder().decode(OpenLibraryWorkResponse.self, from: data).asDetails()
+        XCTAssertEqual(details.description, "Historia de una aventura.")
+        XCTAssertEqual(details.themes, ["Fantasía"])
+        XCTAssertNil(details.coverID)
+    }
+
+    func testWorkDescriptionAsObjectAndCover() throws {
+        let data = Data("""
+        {"description":{"type":"/type/text","value":"Una novela clásica."},
+         "subjects":["Aventura","Ficción"],"covers":[-1,248]}
+        """.utf8)
+        let details = try JSONDecoder().decode(OpenLibraryWorkResponse.self, from: data).asDetails()
+        XCTAssertEqual(details.description, "Una novela clásica.")
+        XCTAssertEqual(details.coverID, 248)
+        XCTAssertEqual(details.themes, ["Aventura", "Ficción"])
+    }
+
+    func testWorkWithoutDescriptionDoesNotInventOne() throws {
+        let data = Data(#"{"subjects":[]}"#.utf8)
+        let details = try JSONDecoder().decode(OpenLibraryWorkResponse.self, from: data).asDetails()
+        XCTAssertNil(details.description)
+        XCTAssertTrue(details.themes.isEmpty)
+    }
+
+    func testBookCanBeCachedAsJSON() throws {
+        let original = Book(title: "Un libro", author: "Autora", year: nil,
+                            hasCover: true, isSaved: false,
+                            id: "/works/OL123W", coverID: 123)
+        let data = try JSONEncoder().encode([original])
+        let recovered = try JSONDecoder().decode([Book].self, from: data)
+        XCTAssertEqual(recovered.first?.id, original.id)
+        XCTAssertEqual(recovered.first?.coverID, 123)
+        XCTAssertNil(recovered.first?.year)
+    }
+
 }

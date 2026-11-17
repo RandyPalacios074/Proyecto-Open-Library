@@ -1,62 +1,37 @@
-# Pruebas y persistencia de favoritos
+# Pruebas y persistencia
 
-Este documento explica cómo guardamos los libros favoritos y cómo comprobamos las operaciones principales de OpenBooks.
+OpenBooks conserva los favoritos con SwiftData y utiliza XCTest para verificar la búsqueda, la decodificación de datos y las operaciones del almacenamiento local.
 
-## Guardado de favoritos
+## Favoritos
 
-Utilizamos SwiftData para conservar los libros seleccionados, incluso después de cerrar la aplicación.
+`SavedBook` contiene el identificador y los datos necesarios para recuperar un favorito. `SavedBooksRepository` realiza las operaciones con `ModelContext` y cumple el contrato `FavoriteBooksStore`. `BooksState` mantiene la colección que muestran las pantallas y actualiza `isSaved` después de guardar o quitar un libro correctamente.
 
-- `SavedBook` es el modelo que representa un favorito guardado. Conserva un identificador, título, autor, año y disponibilidad de portada.
-- `SavedBooksRepository` permite consultar, guardar y eliminar los registros utilizando el contexto de SwiftData. Cumple el protocolo `FavoriteBooksStore`, que utiliza `BooksState`.
-- `BooksState` mantiene los libros que mostramos en las pantallas, actualiza `isSaved` cuando cambia un favorito y prepara los errores de guardado para que la interfaz los muestre.
-- `OpenBooksApp` configura el contenedor de SwiftData, crea el servicio de favoritos y se lo proporciona a `BooksState` antes de presentar las pantallas.
+Si un libro ya está guardado, no se crea otro registro con el mismo identificador. Si una operación falla, la aplicación presenta un aviso y evita confirmar un cambio que no llegó a guardarse.
 
-Al guardar un libro, comprobamos si su identificador ya existe. Si ya está registrado, no se agrega otra copia. Si ocurre un problema al guardar o eliminar, mostramos un mensaje en lugar de cambiar la interfaz como si la operación hubiera terminado correctamente.
+## Pruebas XCTest
 
-Los libros simulados de XCTest conservan identificadores derivados de autor y título. Los resultados remotos utilizan la clave estable de cada obra de Open Library. Al guardar un favorito remoto también conservamos su portada y temas disponibles.
+Los archivos de `OpenBooksTests/` comprueban:
 
-## Pruebas unitarias con XCTest
+- Interpretación de respuestas JSON, incluidos valores opcionales y descripciones en distintos formatos.
+- Estado de carga, resultados, ausencia de coincidencias y errores de búsqueda.
+- Persistencia de favoritos, control de duplicados y eliminación.
+- Sincronización del estado de favoritos y actualización de los datos de las obras guardadas.
 
-Utilizamos XCTest para revisar las respuestas JSON, la búsqueda y el guardado sin depender de una consulta real a Open Library. Los escenarios de éxito, error y resultados vacíos se prueban con servicios simulados.
+Las pruebas de búsqueda utilizan servicios controlados y las de persistencia usan un contenedor temporal de SwiftData en memoria. Así se pueden ejecutar sin alterar los favoritos personales ni depender de una respuesta real de Open Library.
 
-### Búsqueda
+Para ejecutar las pruebas, abre `OpenBooks.xcodeproj` en Xcode, selecciona el esquema **OpenBooks** y utiliza **Product → Test** (⌘U). El resultado de cada ejecución debe comprobarse en Xcode.
 
-1. Una consulta válida obtiene libros del servicio simulado y muestra contenido.
-2. Una respuesta sin libros muestra el estado sin resultados.
-3. Un error del servicio muestra un mensaje y permite volver a consultar.
-4. Una consulta vacía no genera resultados.
-5. Una consulta nueva reemplaza los resultados anteriores.
-6. Repetir la misma consulta no duplica libros en la colección.
-7. La decodificación JSON interpreta título, autores, año, portada y temas.
-8. Si faltan datos opcionales, los modelos pueden decodificarse.
-9. Una respuesta JSON sin documentos se interpreta como una lista vacía.
+## Comprobación manual de las funciones
 
-### Favoritos
+1. Abre Inicio y comprueba que las sugerencias se cargan desde Open Library.
+2. Abre un libro y revisa la sección «Sobre este libro».
+3. Busca un título conocido y comprueba sus resultados.
+4. Abre Detalle y agrega el libro a Mis favoritos.
+5. Cierra y vuelve a abrir la aplicación sin borrar sus datos.
+6. Comprueba que el favorito continúa guardado y después quítalo.
+7. Revisa los estados de búsqueda sin resultados y de error.
+8. Comprueba la apariencia clara y oscura del sistema.
 
-10. Guardar un libro permite recuperarlo mediante otro contexto de SwiftData dentro de la prueba.
-11. Intentar guardar el mismo libro dos veces no genera registros duplicados.
-12. Eliminar un favorito hace que ya no aparezca entre los registros guardados.
-13. Utilizar un índice de libro inválido no modifica los favoritos.
-14. Agregar y quitar un favorito desde `BooksState` mantiene la colección y los registros sincronizados.
-15. Si falla la consulta del servicio de favoritos, `BooksState` prepara un mensaje de error para la interfaz.
-16. Si falla el guardado de un favorito, el estado del libro no se marca como guardado y se informa el error.
-17. Un libro obtenido de Open Library se recupera de SwiftData con su identificador, portada y temas.
+## Limitaciones
 
-Las pruebas de SwiftData utilizan una configuración temporal en memoria y los errores del servicio se comprueban con un servicio simulado. Así podemos comprobar sus operaciones sin modificar la colección de una persona que utilice la aplicación.
-
-## Comprobación al cerrar y reabrir
-
-Además de las pruebas unitarias, revisamos el siguiente recorrido en un simulador de iOS:
-
-1. Abrir OpenBooks y agregar *1984* a Mis favoritos.
-2. Confirmar que aparece en la colección.
-3. Cerrar OpenBooks por completo.
-4. Volver a abrir la aplicación sin borrar sus datos.
-5. Entrar a Mis favoritos y comprobar que *1984* continúa guardado.
-6. Quitar el favorito y comprobar que la colección queda vacía.
-
-Este recorrido permite distinguir entre un favorito que solamente permanece durante la navegación y uno que realmente se recupera después de cerrar la aplicación.
-
-## Pendientes
-
-La búsqueda normal ya consulta Open Library mediante HTTPS. Falta confirmar el comportamiento en un dispositivo real y completar la revisión de accesibilidad. La cantidad y disponibilidad de datos dependen de la API externa.
+La información de los libros procede de un servicio externo; puede haber consultas lentas, sin coincidencias o con datos incompletos. Las pruebas controladas verifican la lógica interna, pero no garantizan la disponibilidad de Open Library.

@@ -33,7 +33,7 @@ final class SavedBooksRepositoryTests: XCTestCase {
     func testRemovingBookLeavesAnEmptyCollection() throws {
         let container = try makeContainer()
         let repository = SavedBooksRepository(context: ModelContext(container))
-        try repository.save(mockBooks[2])
+        XCTAssertTrue(try repository.save(mockBooks[2]))
         XCTAssertTrue(try repository.delete(mockBooks[2]))
         XCTAssertTrue(try repository.savedBooks().isEmpty)
         XCTAssertFalse(try repository.delete(mockBooks[2]))
@@ -85,6 +85,27 @@ final class SavedBooksRepositoryTests: XCTestCase {
         XCTAssertEqual(restored?.coverID, 25)
         XCTAssertEqual(restored?.themes, ["Fantasía"])
         XCTAssertEqual(restored?.isSaved, true)
+    }
+
+    func testWorkDetailsUpdateSavedCoverAfterReopening() throws {
+        let container = try makeContainer()
+        let repository = SavedBooksRepository(context: ModelContext(container))
+        let state = BooksState(store: repository, books: [])
+        let remote = Book(title: "El hobbit", author: "Tolkien", year: "1937",
+                          hasCover: false, isSaved: false, id: "/works/OL100W")
+        let index = try XCTUnwrap(state.addSearchResults([remote]).first)
+        XCTAssertTrue(state.toggleSaved(at: index))
+
+        let details = OpenLibraryWorkDetails(description: "Una aventura.",
+                                             themes: ["Fantasía"], coverID: 25)
+        state.applyWorkDetails(details, at: index)
+
+        let reopened = SavedBooksRepository(context: ModelContext(container))
+        let saved = try XCTUnwrap(reopened.savedBookSummaries().first)
+        XCTAssertEqual(saved.coverID, 25)
+        XCTAssertEqual(saved.themes, ["Fantasía"])
+        XCTAssertTrue(saved.isSaved)
+        XCTAssertEqual(state.books[index].synopsis, "Una aventura.")
     }
 
     func testInvalidIndexDoesNotChangeSavedBooks() throws {

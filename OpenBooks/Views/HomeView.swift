@@ -68,29 +68,21 @@ struct HomeView: View {
                             .accessibilityAddTraits(.isHeader)
 
                         if suggestionsState == .content {
-                            Text("De Open Library")
-                                .font(.caption)
-                                .foregroundStyle(Color.appMuted)
-                        }
-
-                        if suggestionsState == .content {
                             LazyVGrid(columns: suggestionColumns, alignment: .center, spacing: 24) {
                                 ForEach(visibleIndices, id: \.self) { index in
                                     NavigationLink(value: index) {
                                         VStack(spacing: 9) {
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 11)
-                                                    .fill(Color.appNavSurface)
-                                                editorialCover(for: index)
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity,
-                                                           alignment: .center)
-                                                    .padding(3)
+                                            GeometryReader { geometry in
+                                                BookCoverArtworkView(book: books[index], fillsFrame: true)
+                                                    .frame(width: geometry.size.width,
+                                                           height: geometry.size.height)
+                                                    .clipped()
                                             }
                                             .aspectRatio(2.0 / 3.0, contentMode: .fit)
                                             .frame(maxWidth: .infinity)
                                             .clipShape(RoundedRectangle(cornerRadius: 11))
 
-                                            Text(shortTitle(for: index))
+                                            Text(books[index].title)
                                                 .font(.subheadline.weight(.medium))
                                                 .foregroundStyle(Color.appInk)
                                                 .lineLimit(3)
@@ -144,13 +136,5 @@ struct HomeView: View {
             BottomNavigationView(homeActive: true, onHome: {}, onMyBooks: onMyBooks)
         }
         .background(Color.appCanvas.ignoresSafeArea())
-    }
-
-    private func shortTitle(for index: Int) -> String {
-        books[index].title
-    }
-
-    private func editorialCover(for index: Int) -> some View {
-        BookCoverArtworkView(book: books[index])
     }
 }
